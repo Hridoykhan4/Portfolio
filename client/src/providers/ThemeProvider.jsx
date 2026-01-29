@@ -3,20 +3,23 @@ import ThemeContext from "../contexts/ThemeContext";
 
 const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) return savedTheme;
+    const saved = localStorage.getItem("theme");
+    if(saved === 'light') return 'light'
+    if(saved === 'dark' || saved === 'forest') return 'forest'
     return window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
+      ? "forest"
       : "light";
   });
 
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
+    const root = document.documentElement;
+    root.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
+    root.classList.toggle("dark", theme === "forest");
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+    setTheme((prev) => (prev === "light" ? "forest" : "light"));
   };
 
   return (

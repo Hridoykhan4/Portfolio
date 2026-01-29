@@ -13,6 +13,10 @@ const Router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: '*',
+    element: 'Err'
+  }
 ]);
 
 export default Router;
