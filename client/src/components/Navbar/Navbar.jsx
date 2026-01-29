@@ -1,8 +1,12 @@
-import { motion as Motion} from "motion/react";
+import { motion as Motion } from "motion/react";
+import { useContext } from "react";
 import { Link } from "react-router";
+import ThemeContext from "../../contexts/ThemeContext";
 // import ThemeSwitcher from "./ThemeSwitcher";
 
 const Navbar = () => {
+  const { theme } = useContext(ThemeContext);
+
   return (
     <Motion.nav
       initial={{ y: -100 }}
