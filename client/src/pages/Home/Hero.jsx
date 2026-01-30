@@ -139,7 +139,7 @@ const Hero = () => {
             </motion.div>
 
             {/* --- TECH STACK DOCK --- */}
-            <motion.div
+      {/*       <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
@@ -169,7 +169,7 @@ const Hero = () => {
                 className="text-3xl lg:text-4xl text-[#F7DF1E]"
                 title="JavaScript"
               />
-            </motion.div>
+            </motion.div> */}
           </div>
 
           {/* ================= VISUAL IMAGE SIDE ================= */}
