@@ -45,4 +45,27 @@
   .container-page {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
+  .section-spacing {
+    @apply py-16 lg:py-24 xl:py-28;
+  }
+  .badge-glass {
+    @apply bg-base-100/80 backdrop-blur-md border border-base-content/10 shadow-2xl rounded-2xl p-4;
+  }
+
+  .text-gradient {
+    @apply text-transparent bg-clip-text bg-linear-to-r from-primary via-secondary to-accent;
+  }
+  
+  .social-icon-btn {
+    @apply btn btn-ghost btn-circle border border-base-content/5 bg-base-200/50 hover:bg-primary hover:text-primary-content transition-all duration-300;
+  }
+  .mask-fade-edges {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 15%,
+      black 85%,
+      transparent
+    );
+  }
 }

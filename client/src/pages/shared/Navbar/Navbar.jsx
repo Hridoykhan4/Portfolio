@@ -43,7 +43,7 @@ const Navbar = () => {
       variants={navMotion}
       initial="hidden"
       animate="visible"
-      className="sticky top-0 z-100 w-full pt-4"
+      className="sticky top-0 z-100 w-full"
     >
       <div className="container-page">
         {/* Main Glass Bar */}
