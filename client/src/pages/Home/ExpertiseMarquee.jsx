@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import { motion } from "motion/react";
 
 const expertiseList = [
@@ -23,7 +24,7 @@ const ExpertiseMarquee = () => {
       className="relative section-spacing bg-base-100 overflow-hidden"
       aria-labelledby="expertise-heading"
     >
-      {/* Dynamic Background Glow */}
+      {/* Dynamic Glow*/}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-full bg-primary/5 -rotate-3 -z-10" />
 
       <div className="container-page mb-12">
@@ -50,9 +51,9 @@ const ExpertiseMarquee = () => {
         </div>
       </div>
 
-      {/* Marquee Container with Skew Effect */}
+      {/* Marquee Container */}
       <div className="relative -rotate-2 scale-105 space-y-4 md:space-y-6 mask-fade-edges py-10">
-        {/* Row 1: Fast & Bold */}
+        {/* Row 1 */}
         <div className="flex overflow-hidden border-y border-base-content/5 bg-base-200/30 backdrop-blur-sm py-4">
           <motion.div
             className="flex gap-4 md:gap-8 flex-none"
@@ -65,7 +66,7 @@ const ExpertiseMarquee = () => {
           </motion.div>
         </div>
 
-        {/* Row 2: Faster & Distinct */}
+        {/* Row 2 */}
         <div className="flex overflow-hidden">
           <motion.div
             className="flex gap-4 md:gap-8 flex-none"
