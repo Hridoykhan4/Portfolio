@@ -91,20 +91,17 @@ const Hero = () => {
               className="flex flex-wrap items-center justify-center lg:justify-start gap-4 sm:gap-6"
             >
               {/* Contact Button */}
-              <Link
-                to="/contact"
-                className="group relative px-8 py-4 bg-primary text-primary-content font-bold rounded-2xl overflow-hidden transition-all hover:shadow-[0_0_25px_-5px_var(--color-primary)] active:scale-95 flex items-center gap-2"
-              >
-                <FaPaperPlane className="text-sm group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
+              <Link to="/contact" className="btn-cta group">
+                <FaPaperPlane className="text-sm transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
                 Contact Me
               </Link>
 
               {/* Resume Button */}
               <button
                 onClick={handleDownloadResume}
-                className="group px-8 py-4 bg-base-200 text-base-content font-bold rounded-2xl border border-base-content/10 transition-all hover:bg-base-300 active:scale-95 flex items-center gap-2"
+                className="btn-cta-soft group"
               >
-                <FaDownload className="text-sm group-hover:animate-bounce" />{" "}
+                <FaDownload className="text-sm transition-transform group-hover:translate-y-0.5" />
                 Resume
               </button>
 
@@ -139,7 +136,7 @@ const Hero = () => {
             </motion.div>
 
             {/* --- TECH STACK DOCK --- */}
-      {/*       <motion.div
+            {/*       <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}

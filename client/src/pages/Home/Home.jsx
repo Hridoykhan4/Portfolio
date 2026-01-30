@@ -16,14 +16,16 @@ const Home = () => {
       <ScrollReveal delay={0.2}>
         <ExpertiseMarquee></ExpertiseMarquee>
       </ScrollReveal>
+
+      
     </section>
 
-    /*   <Hero />
-  <ExpertiseMarquee />
+    /*   
   <FeaturedProjects />
-  <TechStack />
+  < Experience and Education/>
   <Newsletter />
-  <ContactCTA /> */
+  <ContactCTA /> 
+  */
   );
 };
 

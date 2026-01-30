@@ -157,4 +157,55 @@
   .animate-floaty {
     animation: float 6s ease-in-out infinite;
   }
+
+   /* Primary CTA (Download / Contact) */
+  .btn-cta {
+    @apply relative inline-flex items-center gap-2
+           px-8 py-4 rounded-2xl font-bold
+           bg-primary text-primary-content
+           border border-primary/20
+           overflow-hidden
+           transition-all duration-500
+           active:scale-95;
+  }
+
+  /* Soft glow on hover (no neon) */
+  .btn-cta::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      120deg,
+      transparent 20%,
+      rgba(255,255,255,0.25),
+      transparent 80%
+    );
+    transform: translateX(-100%);
+    transition: transform 0.8s ease;
+  }
+
+  .btn-cta:hover::before {
+    transform: translateX(100%);
+  }
+
+  .btn-cta:hover {
+    box-shadow:
+      0 10px 30px -10px color-mix(in oklab, var(--color-primary), transparent 60%);
+  }
+
+  /* Secondary CTA (Resume / Neutral action) */
+  .btn-cta-soft {
+    @apply relative inline-flex items-center gap-2
+           px-8 py-4 rounded-2xl font-semibold
+           bg-base-200 text-base-content
+           border border-base-content/10
+           transition-all duration-500
+           hover:bg-base-300
+           active:scale-95;
+  }
+
+  .btn-cta-soft:hover {
+    box-shadow:
+      0 8px 20px -10px rgba(0,0,0,0.25);
+  }
 }
