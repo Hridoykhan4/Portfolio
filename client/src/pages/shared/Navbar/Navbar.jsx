@@ -67,14 +67,17 @@ const Navbar = () => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  const rotateX = useTransform(mouseY, [-300, 300], [5, -5]);
-  const rotateY = useTransform(mouseX, [-300, 300], [-5, 5]);
+  const rotateX = useTransform(mouseY, [-300, 300], [3, -3]);
+  const rotateY = useTransform(mouseX, [-300, 300], [-3, 3]);
+
+ 
+  const isContactPage = location.pathname === "/contact";
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -109,8 +112,10 @@ const Navbar = () => {
       className="sticky top-0 z-100 w-full"
       style={{ perspective: 1200 }}
     >
-      <div className="container-page">
+      {/* Backdrop blur layer for sticky effect */}
+      <div className="absolute inset-0 bg-base-100/80 backdrop-blur-xl -z-10" />
 
+      <div className="container-page py-3">
         <Motion.div
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
@@ -124,35 +129,38 @@ const Navbar = () => {
             px-4 md:px-6 transition-all duration-500
             ${
               scrolled
-                ? "border-base-content/20 bg-base-100/90 shadow-2xl shadow-primary/10"
-                : "border-base-content/10 bg-base-100/70 shadow-xl"
+                ? "border-base-content/20 bg-base-100/95 shadow-2xl shadow-primary/10"
+                : "border-base-content/10 bg-base-100/80 shadow-xl"
             }
           `}
         >
-
+          {/* 3D Inner Glow */}
           <div
             className="absolute inset-0 rounded-3xl bg-linear-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none"
             style={{ transform: "translateZ(1px)" }}
           />
 
+          {/* Animated Border linear (on hover) */}
           <div
-            className="absolute inset-0 rounded-3xl opacity-0 hover:opacity-100 transition-opacity duration-500 pointer-events-none overflow-hidden"
+            className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none overflow-hidden"
             style={{ transform: "translateZ(2px)" }}
           >
             <div
-              className="absolute inset-full bg-linear-conic from-primary via-accent to-primary animate-spin-slow"
-              style={{ animationDuration: "8s" }}
+              className="absolute inset-full bg-linear-conic from-primary via-accent to-primary"
+              style={{
+                animation: "spin 8s linear infinite",
+              }}
             />
             <div className="absolute inset-0.5 rounded-3xl bg-base-100/95 backdrop-blur-2xl" />
           </div>
 
           <div
-            className="navbar min-h-16 p-0 relative"
+            className="navbar min-h-16 p-0 relative group"
             style={{ transform: "translateZ(10px)" }}
           >
-         
+            {/* Logo Section */}
             <Motion.div className="flex-1" variants={itemMotion}>
-              <Link to="/" className="flex items-center gap-3 group">
+              <Link to="/" className="flex items-center gap-3 group/logo">
                 <Motion.div
                   className="relative"
                   whileHover={{
@@ -164,7 +172,7 @@ const Navbar = () => {
                 >
                   <img
                     src="/logo.svg"
-                    alt="Logo"
+                    alt="Hridoy Portfolio Logo"
                     className="w-8 h-8 md:w-9 md:h-9 drop-shadow-2xl"
                     style={{ transform: "translateZ(20px)" }}
                   />
@@ -211,7 +219,7 @@ const Navbar = () => {
               </Link>
             </Motion.div>
 
-           
+            {/* Desktop Navigation */}
             <Motion.ul
               className="hidden lg:flex items-center gap-1"
               variants={itemMotion}
@@ -257,7 +265,7 @@ const Navbar = () => {
                           />
                         )}
 
-                        
+                        {/* 3D Hover Background */}
                         <Motion.span
                           className="absolute inset-0 bg-primary/10 rounded-xl -z-10"
                           initial={{ opacity: 0, scale: 0.8 }}
@@ -275,21 +283,26 @@ const Navbar = () => {
               ))}
             </Motion.ul>
 
+            {/* Action Group */}
             <Motion.div
               className="flex items-center gap-1 md:gap-3 ml-4"
               variants={itemMotion}
             >
+              {/* Theme Toggle */}
               <Motion.button
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleTheme();
                 }}
                 className="btn btn-ghost btn-circle btn-sm md:btn-md text-lg relative overflow-hidden"
+                whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 style={{ transformStyle: "preserve-3d" }}
+                aria-label="Toggle theme"
               >
                 <Motion.div
                   className="absolute inset-0 bg-linear-to-br from-primary/20 to-accent/20 rounded-full"
+                  animate={{ rotate: 360 }}
                   transition={{
                     duration: 8,
                     repeat: Infinity,
@@ -297,53 +310,72 @@ const Navbar = () => {
                   }}
                   style={{ transform: "translateZ(-2px)" }}
                 />
-                {theme === "light" ? (
-                  <FiMoon className="relative z-10" />
-                ) : (
-                  <FiSun className="text-yellow-400 relative z-10" />
-                )}
+                <AnimatePresence mode="wait">
+                  <Motion.div
+                    key={theme}
+                    initial={{ rotateY: -90, opacity: 0 }}
+                    animate={{ rotateY: 0, opacity: 1 }}
+                    exit={{ rotateY: 90, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="relative z-10"
+                  >
+                    {theme === "light" ? (
+                      <FiMoon />
+                    ) : (
+                      <FiSun className="text-yellow-400" />
+                    )}
+                  </Motion.div>
+                </AnimatePresence>
               </Motion.button>
 
-              <Motion.div
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                style={{ transformStyle: "preserve-3d" }}
-              >
-                <Link
-                  to="/contact"
-                  className="btn btn-primary btn-sm hidden md:inline-flex px-6 font-bold tracking-wider rounded-xl relative overflow-hidden group"
+              {/* Contact CTA - Only show if NOT on contact page */}
+              {!isContactPage && (
+                <Motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  style={{ transformStyle: "preserve-3d" }}
                 >
-                  <Motion.span
-                    className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent"
-                    animate={{
-                      x: ["-100%", "100%"],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                  />
-                  <span className="relative z-10">HIRE ME</span>
-                  <Motion.span
-                    className="absolute inset-0 bg-accent/20 rounded-xl"
-                    initial={{ scale: 0, opacity: 0 }}
-                    whileHover={{
-                      scale: 1,
-                      opacity: 1,
-                      transition: { duration: 0.3 },
-                    }}
-                    style={{ transform: "translateZ(-3px)" }}
-                  />
-                </Link>
-              </Motion.div>
+                  <Link
+                    to="/contact"
+                    className="btn btn-primary btn-sm hidden md:inline-flex px-6 font-bold tracking-wider rounded-xl relative overflow-hidden group"
+                  >
+                    <Motion.span
+                      className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent"
+                      animate={{
+                        x: ["-100%", "100%"],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
+                    />
+                    <span className="relative z-10">HIRE ME</span>
+                    <Motion.span
+                      className="absolute inset-0 bg-accent/20 rounded-xl"
+                      initial={{ scale: 0, opacity: 0 }}
+                      whileHover={{
+                        scale: 1,
+                        opacity: 1,
+                        transition: { duration: 0.3 },
+                      }}
+                      style={{ transform: "translateZ(-3px)" }}
+                    />
+                  </Link>
+                </Motion.div>
+              )}
 
+              {/* Mobile Menu Toggle */}
               <Motion.button
                 className="lg:hidden btn btn-ghost btn-circle text-2xl"
                 onClick={() => setIsOpen(!isOpen)}
-                whileHover={{ scale: 1.1, rotate: 90 }}
+                whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                aria-label="Toggle menu"
               >
                 <AnimatePresence mode="wait">
                   <Motion.div
@@ -361,7 +393,7 @@ const Navbar = () => {
           </div>
         </Motion.div>
 
-       
+        {/* Mobile Menu */}
         <AnimatePresence>
           {isOpen && (
             <Motion.div
@@ -430,30 +462,33 @@ const Navbar = () => {
                   </Motion.li>
                 ))}
 
-                <Motion.div
-                  variants={itemMotion}
-                  whileHover={{ scale: 1.03, y: -2 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="mt-4"
-                >
-                  <Link
-                    to="/contact"
-                    className="btn btn-primary w-full shadow-lg shadow-primary/20 relative overflow-hidden group"
+                {/* Mobile Contact CTA - Only show if NOT on contact page */}
+                {!isContactPage && (
+                  <Motion.div
+                    variants={itemMotion}
+                    whileHover={{ scale: 1.03, y: -2 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="mt-4"
                   >
-                    <Motion.span
-                      className="absolute inset-0 bg-linear-to-r from-transparent via-white/30 to-transparent"
-                      animate={{
-                        x: ["-100%", "100%"],
-                      }}
-                      transition={{
-                        duration: 1.5,
-                        repeat: Infinity,
-                        ease: "linear",
-                      }}
-                    />
-                    <span className="relative z-10">LET'S TALK</span>
-                  </Link>
-                </Motion.div>
+                    <Link
+                      to="/contact"
+                      className="btn btn-primary w-full shadow-lg shadow-primary/20 relative overflow-hidden"
+                    >
+                      <Motion.span
+                        className="absolute inset-0 bg-linear-to-r from-transparent via-white/30 to-transparent"
+                        animate={{
+                          x: ["-100%", "100%"],
+                        }}
+                        transition={{
+                          duration: 1.5,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
+                      />
+                      <span className="relative z-10">LET'S TALK</span>
+                    </Link>
+                  </Motion.div>
+                )}
               </Motion.ul>
             </Motion.div>
           )}

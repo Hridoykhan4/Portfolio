@@ -13,40 +13,33 @@ import { SiMongodb, SiExpress, SiReact, SiNodedotjs } from "react-icons/si";
 
 const STATS = [
   {
-    icon: FaGraduationCap,
-    label: "Education",
-    value: "BSc in CSE",
-    sub: "Port City International University",
-    color: "#2563eb",
-  },
-  {
     icon: FaCode,
-    label: "Projects",
+    label: "Development",
     value: "92+ Repos",
-    sub: "Full-Stack & Open Source",
-    color: "#7c3aed",
+    sub: "Open Source & Full-Stack",
+    color: "#2563eb",
   },
   {
     icon: FaRocket,
     label: "Specialization",
     value: "MERN Stack",
-    sub: "Production-Ready Solutions",
+    sub: "Enterprise-Ready Solutions",
+    color: "#7c3aed",
+  },
+  {
+    icon: FaGraduationCap,
+    label: "Education",
+    value: "BSc in CSE",
+    sub: "Port City International University",
     color: "#059669",
   },
   {
     icon: FaMapMarkerAlt,
-    label: "Location",
-    value: "Chittagong, BD",
-    sub: "Open to Remote & Relocation",
+    label: "Availability",
+    value: "Remote / BD",
+    sub: "Ready for global relocation",
     color: "#dc2626",
   },
-];
-
-const TECH_ICONS = [
-  { Icon: SiMongodb, color: "#47A248" },
-  { Icon: SiExpress, color: "#0075C9" },
-  { Icon: SiReact, color: "#61DAFB" },
-  { Icon: SiNodedotjs, color: "#339933" },
 ];
 
 const AcademicSnapshot = () => {
@@ -147,44 +140,6 @@ const AcademicSnapshot = () => {
                 isInView={isInView}
                 isLast={idx === STATS.length - 1}
               />
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Tech Stack Banner */}
-        <motion.div
-          className="mt-16 flex flex-col items-center gap-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.6 }}
-        >
-          <p className="text-xs font-bold uppercase tracking-[0.3em] text-base-content/40">
-            Core Stack
-          </p>
-          <div className="flex items-center gap-6">
-            {TECH_ICONS.map(({ Icon, color }, idx) => (
-              <motion.div
-                key={idx}
-                className="relative group"
-                initial={{ opacity: 0, scale: 0 }}
-                animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{
-                  duration: 0.5,
-                  delay: 0.7 + idx * 0.1,
-                  type: "spring",
-                  stiffness: 200,
-                }}
-                whileHover={{ scale: 1.2, y: -5 }}
-              >
-                <Icon
-                  className="text-4xl lg:text-5xl opacity-60 group-hover:opacity-100 transition-opacity"
-                  style={{ color }}
-                />
-                <motion.div
-                  className="absolute -inset-2 rounded-full blur-lg opacity-0 group-hover:opacity-30"
-                  style={{ backgroundColor: color }}
-                />
-              </motion.div>
             ))}
           </div>
         </motion.div>

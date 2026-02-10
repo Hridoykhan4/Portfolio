@@ -137,39 +137,7 @@ const FeaturedProjects = () => {
           ))}
         </div>
 
-        {/* Stats Footer */}
-        <motion.div
-          className="mt-20 pt-12 border-t border-base-content/5"
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.9, duration: 0.8 }}
-        >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { value: "92+", label: "Total Projects", icon: FaCode },
-              { value: "5", label: "Featured Apps", icon: FaRocket },
-              { value: "100%", label: "Responsive", icon: FaLaptopCode },
-              { value: "MERN", label: "Stack Expert", icon: FaCode },
-            ].map((stat, idx) => (
-              <motion.div
-                key={idx}
-                className="text-center group"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ delay: 0.9 + idx * 0.1, duration: 0.5 }}
-                whileHover={{ y: -5 }}
-              >
-                <stat.icon className="text-3xl text-primary mx-auto mb-3 group-hover:scale-110 transition-transform" />
-                <div className="text-3xl md:text-4xl font-black text-primary mb-2">
-                  {stat.value}
-                </div>
-                <div className="text-xs font-bold uppercase tracking-wider text-base-content/60">
-                  {stat.label}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+    
       </div>
     </section>
   );

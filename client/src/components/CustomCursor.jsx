@@ -1,18 +1,18 @@
 /* eslint-disable no-unused-vars */
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import { motion, useMotionValue, useSpring } from "motion/react";
 import ThemeContext from "../contexts/ThemeContext";
-
 
 const CustomCursor = () => {
   const { theme } = useContext(ThemeContext);
   const [cursorVariant, setCursorVariant] = useState("default");
   const [isVisible, setIsVisible] = useState(false);
+  const [isPointer, setIsPointer] = useState(false);
 
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
 
-  const springConfig = { damping: 25, stiffness: 300 };
+  const springConfig = { damping: 28, stiffness: 320 };
   const cursorXSpring = useSpring(cursorX, springConfig);
   const cursorYSpring = useSpring(cursorY, springConfig);
 
@@ -21,19 +21,34 @@ const CustomCursor = () => {
     const hasHover = window.matchMedia("(hover: hover)").matches;
     if (!hasHover) return;
 
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (prefersReducedMotion) return;
+
+    let rafId = null;
+
     const moveCursor = (e) => {
-      cursorX.set(e.clientX - 16);
-      cursorY.set(e.clientY - 16);
-      setIsVisible(true);
+      if (rafId) return;
+
+      rafId = requestAnimationFrame(() => {
+        cursorX.set(e.clientX - 16);
+        cursorY.set(e.clientY - 16);
+        setIsVisible(true);
+        rafId = null;
+      });
     };
 
     const hideCursor = () => setIsVisible(false);
+    const showCursor = () => setIsVisible(true);
 
-    // Detect interactive elements
-    const handleMouseEnter = (e) => {
+    // Optimized interactive element detection
+    const handleMouseOver = (e) => {
       const target = e.target;
 
-      if (
+      // Check for interactive elements
+      const isInteractive =
         target.tagName === "A" ||
         target.tagName === "BUTTON" ||
         target.closest("a") ||
@@ -42,103 +57,101 @@ const CustomCursor = () => {
         target.classList.contains("btn") ||
         target.classList.contains("social-icon-btn") ||
         target.classList.contains("btn-cta") ||
-        target.classList.contains("btn-cta-soft")
-      ) {
-        setCursorVariant("link");
-      } else if (
+        target.classList.contains("btn-cta-soft");
+
+      const isTextInput =
         target.tagName === "INPUT" ||
         target.tagName === "TEXTAREA" ||
-        target.contentEditable === "true"
-      ) {
+        target.contentEditable === "true";
+
+      if (isInteractive) {
+        setCursorVariant("link");
+        setIsPointer(true);
+      } else if (isTextInput) {
         setCursorVariant("text");
+        setIsPointer(false);
+      } else {
+        setCursorVariant("default");
+        setIsPointer(false);
       }
     };
 
-    const handleMouseLeave = () => {
-      setCursorVariant("default");
-    };
-
     // Add event listeners
-    window.addEventListener("mousemove", moveCursor);
+    window.addEventListener("mousemove", moveCursor, { passive: true });
     window.addEventListener("mouseleave", hideCursor);
-    window.addEventListener("mouseenter", () => setIsVisible(true));
-
-    // Add listeners to all interactive elements
-    document.addEventListener("mouseover", handleMouseEnter);
-document.addEventListener("mouseout", handleMouseLeave);
-
+    window.addEventListener("mouseenter", showCursor);
+    document.addEventListener("mouseover", handleMouseOver, { passive: true });
 
     return () => {
       window.removeEventListener("mousemove", moveCursor);
       window.removeEventListener("mouseleave", hideCursor);
-      document.removeEventListener("mouseenter", handleMouseEnter, true);
-      document.removeEventListener("mouseleave", handleMouseLeave, true);
+      window.removeEventListener("mouseenter", showCursor);
+      document.removeEventListener("mouseover", handleMouseOver);
+      if (rafId) cancelAnimationFrame(rafId);
     };
   }, [cursorX, cursorY]);
 
-  const variants = {
-    default: {
-      width: 32,
-      height: 32,
-      backgroundColor:
-        theme === "light"
-          ? "rgba(37, 99, 235, 0.2)"
-          : "rgba(56, 189, 248, 0.2)",
-      border:
-        theme === "light"
-          ? "2px solid rgba(37, 99, 235, 0.5)"
-          : "2px solid rgba(56, 189, 248, 0.5)",
-    },
-    link: {
-      width: 60,
-      height: 60,
-      backgroundColor:
-        theme === "light"
-          ? "rgba(37, 99, 235, 0.1)"
-          : "rgba(56, 189, 248, 0.1)",
-      border:
-        theme === "light"
-          ? "2px solid rgba(37, 99, 235, 0.8)"
-          : "2px solid rgba(56, 189, 248, 0.8)",
-    },
-    text: {
-      width: 2,
-      height: 24,
-      backgroundColor:
-        theme === "light"
-          ? "rgba(37, 99, 235, 0.8)"
-          : "rgba(56, 189, 248, 0.8)",
-      border: "none",
-    },
-  };
+  // Don't render on mobile/tablet or if reduced motion
+  if (typeof window !== "undefined") {
+    const hasHover = window.matchMedia("(hover: hover)").matches;
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
 
-  // Don't render on mobile/tablet
-  if (
-    typeof window !== "undefined" &&
-    !window.matchMedia("(hover: hover)").matches
-  ) {
-    return null;
+    if (!hasHover || prefersReducedMotion) {
+      return null;
+    }
   }
 
-  const prefersReducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  ).matches;
+  // Theme-aware cursor styles
+  const getCursorStyles = () => {
+    const isLight = theme === "light";
 
-  if (prefersReducedMotion) return null;
+    return {
+      default: {
+        width: 32,
+        height: 32,
+        backgroundColor: isLight
+          ? "rgba(37, 99, 235, 0.15)"
+          : "rgba(56, 189, 248, 0.2)",
+        border: isLight
+          ? "2px solid rgba(37, 99, 235, 0.4)"
+          : "2px solid rgba(56, 189, 248, 0.5)",
+      },
+      link: {
+        width: 64,
+        height: 64,
+        backgroundColor: isLight
+          ? "rgba(37, 99, 235, 0.08)"
+          : "rgba(56, 189, 248, 0.12)",
+        border: isLight
+          ? "2px solid rgba(37, 99, 235, 0.6)"
+          : "2px solid rgba(56, 189, 248, 0.7)",
+      },
+      text: {
+        width: 2,
+        height: 28,
+        backgroundColor: isLight
+          ? "rgba(37, 99, 235, 0.9)"
+          : "rgba(56, 189, 248, 0.9)",
+        border: "none",
+      },
+    };
+  };
 
+  const variants = getCursorStyles();
+  const dotColor = theme === "light" ? "#2563eb" : "#38bdf8";
 
   return (
     <>
-      {/* Main Cursor */}
+      {/* Main Cursor Ring */}
       <motion.div
-       className={`fixed pointer-events-none z-9999 ${
-  theme === "light" ? "mix-blend-normal" : "mix-blend-difference"
-}`}
-
+        className="fixed pointer-events-none z-[9999]"
         style={{
           x: cursorXSpring,
           y: cursorYSpring,
           opacity: isVisible ? 1 : 0,
+          mixBlendMode: theme === "light" ? "normal" : "difference",
         }}
       >
         <motion.div
@@ -148,7 +161,7 @@ document.addEventListener("mouseout", handleMouseLeave);
           transition={{
             type: "spring",
             stiffness: 500,
-            damping: 28,
+            damping: 30,
           }}
           style={{
             width: variants[cursorVariant].width,
@@ -156,12 +169,31 @@ document.addEventListener("mouseout", handleMouseLeave);
             backgroundColor: variants[cursorVariant].backgroundColor,
             border: variants[cursorVariant].border,
           }}
-        />
+        >
+          {/* Inner Glow Effect */}
+          {isPointer && (
+            <motion.div
+              className="absolute inset-0 rounded-full"
+              style={{
+                background: `radial-gradient(circle, ${dotColor}22 0%, transparent 70%)`,
+              }}
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.3, 0.6, 0.3],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+          )}
+        </motion.div>
       </motion.div>
 
-      {/* Cursor Dot */}
+      {/* Center Dot */}
       <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-9999"
+        className="fixed pointer-events-none z-[9999]"
         style={{
           x: cursorXSpring,
           y: cursorYSpring,
@@ -173,18 +205,53 @@ document.addEventListener("mouseout", handleMouseLeave);
           animate={{
             width: cursorVariant === "text" ? 0 : 6,
             height: cursorVariant === "text" ? 0 : 6,
-            backgroundColor: theme === "light" ? "#2563eb" : "#38bdf8",
+            backgroundColor: dotColor,
+            scale: isPointer ? 1.3 : 1,
           }}
           transition={{
             type: "spring",
             stiffness: 500,
-            damping: 28,
+            damping: 30,
           }}
           style={{
             transform: "translate(13px, 13px)",
+            boxShadow: isPointer
+              ? `0 0 8px ${dotColor}, 0 0 12px ${dotColor}`
+              : "none",
           }}
         />
       </motion.div>
+
+      {/* Trailing Effect (Optional - for premium feel) */}
+      {isPointer && (
+        <motion.div
+          className="fixed pointer-events-none z-[9998]"
+          style={{
+            x: cursorXSpring,
+            y: cursorYSpring,
+            opacity: isVisible ? 0.3 : 0,
+          }}
+        >
+          <motion.div
+            className="rounded-full"
+            style={{
+              width: 80,
+              height: 80,
+              border: `1px solid ${dotColor}`,
+              transform: "translate(calc(-50% + 16px), calc(-50% + 16px))",
+            }}
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.2, 0, 0.2],
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              ease: "easeOut",
+            }}
+          />
+        </motion.div>
+      )}
     </>
   );
 };
