@@ -3,30 +3,34 @@ import ScrollReveal from "../../components/ScrollReveal";
 import ExpertiseMarquee from "./ExpertiseMarquee";
 import FeaturedProjects from "./FeaturedProjects";
 import AcademicSnapshot from "./AcademicSnapshot";
+import Newsletter from "../../components/Newsletter";
 
 const Home = () => {
   return (
     <section>
       <ScrollReveal>
-        <Hero></Hero>
+        <Hero />
       </ScrollReveal>
+
       <ScrollReveal delay={0.1}>
-        <AcademicSnapshot></AcademicSnapshot>
+        <FeaturedProjects />
       </ScrollReveal>
+
       <ScrollReveal delay={0.2}>
-        <ExpertiseMarquee></ExpertiseMarquee>
+        <ExpertiseMarquee />
       </ScrollReveal>
+
       <ScrollReveal delay={0.3}>
-        <FeaturedProjects></FeaturedProjects>
+        <AcademicSnapshot />
+      </ScrollReveal>
+
+      <ScrollReveal delay={0.4}>
+        <Newsletter
+          title="Let’s Build Something Meaningful"
+          subtitle="Open to collaboration, research, and real-world projects."
+        />
       </ScrollReveal>
     </section>
-
-    /*   
-  <FeaturedProjects />
-  < Experience and Education/>
-  <Newsletter />
-  <ContactCTA /> 
-  */
   );
 };
 
