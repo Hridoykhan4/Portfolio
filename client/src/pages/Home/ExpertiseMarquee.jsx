@@ -1,79 +1,102 @@
-// eslint-disable-next-line no-unused-vars
-import { motion } from "motion/react";
+/* eslint-disable no-unused-vars */
+import { motion, useInView } from "motion/react";
+import { useRef, useMemo } from "react";
 
-const expertiseList = [
+const EXPERTISE = [
   "React.js",
+  "Next.js",
   "Node.js",
   "Express.js",
   "MongoDB",
-  "JavaScript",
   "TypeScript",
+  "JavaScript",
   "Tailwind CSS",
-  "React Router",
-  "JWT",
   "Firebase",
+  "JWT",
   "REST APIs",
-  "Git & GitHub",
   "Redux Toolkit",
-  "Next.js",
+  "Git & GitHub",
 ];
 
 const ExpertiseMarquee = () => {
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+
+  // Triple the list for a seamless, ultra-long loop
+  const tripledSkills = useMemo(
+    () => [...EXPERTISE, ...EXPERTISE, ...EXPERTISE],
+    [],
+  );
+
   return (
     <section
+      ref={sectionRef}
       className="relative section-spacing bg-base-100 overflow-hidden"
       aria-labelledby="expertise-heading"
     >
-      {/* Dynamic Glow*/}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-full bg-primary/5 -rotate-3 -z-10" />
+      {/* Subtle Background Ambience */}
+      <div className="absolute inset-0 pointer-events-none opacity-30">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 blur-[120px] rounded-full animate-floaty" />
+        <div
+          className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/10 blur-[120px] rounded-full animate-floaty"
+          style={{ animationDelay: "2s" }}
+        />
+      </div>
 
-      <div className="container-page mb-12">
-        <div className="flex flex-col md:flex-row items-end justify-between gap-4">
-          <div className="max-w-xl text-left">
-            <motion.span
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              className="text-[10px] font-black tracking-[0.4em] uppercase text-primary mb-2 block"
-            >
-              Proven Stack
-            </motion.span>
+      {/* Header Section */}
+      <div className="container-page mb-16 relative z-10">
+        <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8 }}
+          >
+            <span className="text-[10px] font-black tracking-[0.4em] uppercase text-primary block mb-3">
+              Technical Stack
+            </span>
             <h2
               id="expertise-heading"
-              className="text-4xl md:text-6xl font-black tracking-tighter"
+              className="text-5xl md:text-7xl font-black tracking-tighter leading-none"
             >
               My <span className="text-gradient">Arsenal.</span>
             </h2>
-          </div>
-          <p className="text-base-content/50 font-medium text-sm md:text-base max-w-xs md:text-right">
-            Continuously evolving with the latest ecosystem standards and best
-            practices.
-          </p>
+          </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            transition={{ delay: 0.3 }}
+            className="text-base-content/50 font-medium max-w-xs md:text-right text-sm md:text-base leading-relaxed"
+          >
+            A production-ready stack focused on performance, scalability, and
+            exceptional user experience.
+          </motion.p>
         </div>
       </div>
 
-      {/* Marquee Container */}
-      <div className="relative -rotate-2 scale-105 space-y-4 md:space-y-6 mask-fade-edges py-10">
-        {/* Row 1 */}
-        <div className="flex overflow-hidden border-y border-base-content/5 bg-base-200/30 backdrop-blur-sm py-4">
+      {/* Marquee Container - Slightly tilted for modern "Bento" aesthetic */}
+      <div className="relative py-4 space-y-6 md:space-y-10">
+        {/* Row 1: Left to Right */}
+        <div className="flex overflow-hidden mask-fade-edges">
           <motion.div
-            className="flex gap-4 md:gap-8 flex-none"
-            animate={{ x: ["0%", "-50%"] }}
-            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+            className="flex gap-4 md:gap-8 flex-none py-4"
+            animate={{ x: ["0%", "-33.33%"] }}
+            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
           >
-            {[...expertiseList, ...expertiseList].map((skill, idx) => (
+            {tripledSkills.map((skill, idx) => (
               <SkillCard key={`row1-${idx}`} label={skill} />
             ))}
           </motion.div>
         </div>
 
-        {/* Row 2 */}
-        <div className="flex overflow-hidden">
+        {/* Row 2: Right to Left (Slightly faster) */}
+        <div className="flex overflow-hidden mask-fade-edges">
           <motion.div
-            className="flex gap-4 md:gap-8 flex-none"
-            animate={{ x: ["-50%", "0%"] }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            className="flex gap-4 md:gap-8 flex-none py-4"
+            animate={{ x: ["-33.33%", "0%"] }}
+            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
           >
-            {[...expertiseList, ...expertiseList].map((skill, idx) => (
+            {tripledSkills.map((skill, idx) => (
               <SkillCard key={`row2-${idx}`} label={skill} secondary />
             ))}
           </motion.div>
@@ -85,25 +108,33 @@ const ExpertiseMarquee = () => {
 
 const SkillCard = ({ label, secondary = false }) => {
   return (
-    <div
+    <motion.div
+      whileHover={{ y: -8, scale: 1.02 }}
       className={`
-        flex-none flex items-center gap-3 px-6 py-3 md:px-10 md:py-5 
+        relative flex items-center gap-4 px-8 py-4 md:px-12 md:py-6
         rounded-2xl transition-all duration-500 cursor-default select-none
+        border backdrop-blur-md
         ${
           secondary
-            ? "bg-primary text-primary-content shadow-xl shadow-primary/20 rotate-3"
-            : "bg-base-100 border border-base-content/10 text-base-content font-bold shadow-sm -rotate-2"
+            ? "bg-primary text-primary-content border-primary/20 shadow-xl shadow-primary/10"
+            : "bg-base-200/40 text-base-content border-base-content/5 shadow-sm hover:border-primary/30"
         }
       `}
     >
-      <span className="text-lg md:text-2xl font-black uppercase tracking-tight italic">
+      {/* Static Shimmer on hover via CSS classes defined in your index.css */}
+      <div className="absolute inset-0 shimmer opacity-0 group-hover:opacity-100 transition-opacity" />
+
+      <span className="text-xl md:text-3xl font-black uppercase tracking-tighter italic">
         {label}
       </span>
-      {/* Aesthetic Dot */}
-      <span
-        className={`h-2 w-2 rounded-full ${secondary ? "bg-primary-content/50" : "bg-primary"}`}
+
+      {/* Aesthetic Signal Dot */}
+      <div
+        className={`h-2 w-2 rounded-full ${
+          secondary ? "bg-primary-content/40" : "bg-primary animate-pulse"
+        }`}
       />
-    </div>
+    </motion.div>
   );
 };
 
