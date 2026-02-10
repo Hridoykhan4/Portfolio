@@ -110,7 +110,7 @@
   html {
     font-family: "Inter", "Plus Jakarta Sans", system-ui, sans-serif;
     @apply transition-colors duration-500;
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
     scrollbar-gutter: stable;
   }
 
@@ -402,5 +402,81 @@
 
   .text-shadow-lg {
     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+
+
+
+
+
+
+
+/* Add these to your existing CSS file */
+
+/* ================================================================
+   CURSOR CUSTOMIZATION
+  ================================================================ */
+
+/* Hide default cursor on desktop */
+@media (hover: hover) {
+  * {
+    cursor: none !important;
+  }
+  
+  /* Keep default cursor for inputs and text areas */
+  input,
+  textarea,
+  select {
+    cursor: text !important;
+  }
+}
+
+/* Smooth scroll optimization */
+html {
+  scroll-behavior: auto;
+  /* When using Lenis, this can be auto */
+  /* scroll-behavior: auto; */
+}
+
+/* Prevent text selection on cursor elements */
+.cursor-element {
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: none;
+}
+
+/* ================================================================
+   SCROLL OPTIMIZATIONS
+  ================================================================ */
+
+/* Better scroll performance */
+body {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent scroll jank */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ================================================================
+   CURSOR INTERACTION HELPERS
+  ================================================================ */
+
+/* Add cursor-pointer class to any element you want interactive cursor on */
+.cursor-pointer {
+  position: relative;
+}
+
+/* Cursor magnetic effect (optional) */
+@media (hover: hover) {
+  .cursor-magnetic {
+    transition: transform 0.2s ease-out;
+  }
+  
+  .cursor-magnetic:hover {
+    transform: scale(1.05);
   }
 }
