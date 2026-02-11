@@ -122,7 +122,7 @@ const ExpertiseMarquee = () => {
       <div className="absolute bottom-0 left-0 right-0 h-24 bg-linear-to-t from-base-100 to-transparent pointer-events-none" />
     </section>
   );
-};git add
+};
 
 const SkillCard = ({ skill }) => {
   return (

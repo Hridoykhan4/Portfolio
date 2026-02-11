@@ -79,13 +79,13 @@
   ================================================================ */
 @plugin "daisyui/theme" {
   name: "light";
-  --color-primary: #2563eb;
+  --color-primary: #1d4ed8;   
   --color-secondary: #475569;
   --color-accent: #7c3aed;
-  --color-base-100: #ffffff;
-  --color-base-200: #f8fafc;
-  --color-base-300: #f1f5f9;
-  --color-base-content: #0f172a;
+  --color-base-100: #fafafa; 
+  --color-base-200: #f4f4f5; 
+  --color-base-300: #e4e4e7;
+  --color-base-content: #09090b; 
 }
 
 /* ================================================================
@@ -93,14 +93,16 @@
   ================================================================ */
 @plugin "daisyui/theme" {
   name: "forest";
-  --color-primary: #38bdf8;
+  /* Mint Teal: Highly readable, modern, and reduces eye strain */
+  --color-primary: #22d3ee;   
   --color-secondary: #94a3b8;
   --color-accent: #a78bfa;
 
-  --color-base-100: #030712;
-  --color-base-200: #0f172a;
+  /* Use a 'Rich Black' with a hint of Navy/Green for depth */
+  --color-base-100: #020617; 
+  --color-base-200: #0f172a; 
   --color-base-300: #1e293b;
-  --color-base-content: #f8fafc;
+  --color-base-content: #f1f5f9; /* Soft white to prevent vibrating text */
 }
 
 /* ================================================================
@@ -115,9 +117,14 @@
   }
 
   body {
-    @apply bg-base-100 text-base-content min-h-screen selection:bg-primary/30;
+    @apply bg-base-100 text-base-content min-h-screen ;
     -webkit-font-smoothing: antialiased;
     position: relative;
+  }
+
+   ::selection {
+    background-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
+    color: var(--color-base-content);
   }
 
   body::before {
@@ -154,8 +161,13 @@
 
   /* Glassmorphism V2 */
   .badge-glass {
-    @apply bg-base-100/40 backdrop-blur-2xl border border-base-content/5 
-           shadow-[0_20px_50px_rgba(0,0,0,0.1)] rounded-3xl p-5 transition-all duration-500;
+    @apply backdrop-blur-xl border transition-all duration-500;
+    background: color-mix(in srgb, var(--color-base-100) 70%, transparent);
+    border-color: color-mix(in srgb, var(--color-base-content) 8%, transparent);
+    box-shadow: 
+      0 8px 32px color-mix(in srgb, var(--color-base-content) 5%, transparent),
+      inset 0 1px 0 color-mix(in srgb, #ffffff 8%, transparent);
+    @apply rounded-3xl p-5;
   }
 
   /* Interaction Elements */
@@ -166,10 +178,13 @@
   }
 
   /* The Bento Card Base */
-  .bento-card {
-    @apply bg-base-200/50 border border-base-content/5 rounded-4xl
-           overflow-hidden transition-all duration-500 hover:border-primary/20
-           hover:shadow-2xl hover:shadow-primary/5;
+   .bento-card {
+    @apply border rounded-3xl overflow-hidden transition-all duration-500 backdrop-blur-md;
+    background: color-mix(in srgb, var(--color-base-200) 80%, transparent);
+    border-color: color-mix(in srgb, var(--color-base-content) 6%, transparent);
+    box-shadow: 
+      0 4px 16px color-mix(in srgb, var(--color-base-content) 4%, transparent),
+      inset 0 1px 0 color-mix(in srgb, #ffffff 5%, transparent);
   }
 
   /* Marquee Fading */
@@ -182,6 +197,15 @@
       transparent
     );
   }
+
+  .bento-card:hover {
+    border-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
+    box-shadow: 
+      0 12px 32px color-mix(in srgb, var(--color-primary) 8%, transparent),
+      inset 0 1px 0 color-mix(in srgb, #ffffff 8%, transparent);
+    transform: translateY(-2px);
+  }
+
 
   /* Floating Animation Wrapper */
   .animate-floaty {

@@ -8,7 +8,7 @@ import ContactForm from "../Contact/ContactForm";
 const Home = () => {
   return (
     <section>
-      {/* <ScrollReveal>
+      <ScrollReveal>
         <Hero />
       </ScrollReveal>
 
@@ -18,7 +18,7 @@ const Home = () => {
 
       <ScrollReveal delay={0.2}>
         <ExpertiseMarquee />
-      </ScrollReveal> */}
+      </ScrollReveal>
 
       <ScrollReveal delay={0.3}>
         <AcademicSnapshot />
