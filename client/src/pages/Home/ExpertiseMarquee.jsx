@@ -1,32 +1,49 @@
 /* eslint-disable no-unused-vars */
-import { motion, useInView } from "motion/react";
+import {
+  motion,
+  useInView,
+  useScroll,
+  useTransform,
+  useReducedMotion,
+} from "motion/react";
 import { useRef, useMemo } from "react";
 
 const EXPERTISE = [
-  "React.js",
-  "Next.js",
-  "Node.js",
-  "Express.js",
-  "MongoDB",
-  "TypeScript",
-  "JavaScript",
-  "Tailwind CSS",
-  "Firebase",
-  "JWT",
-  "REST APIs",
-  "Redux Toolkit",
-  "Git & GitHub",
+  { name: "React.js", icon: "⚛️", color: "#61DAFB" },
+  { name: "Next.js", icon: "▲", color: "#000000" },
+  { name: "Node.js", icon: "◆", color: "#339933" },
+  { name: "Express.js", icon: "◉", color: "#68A063" },
+  { name: "MongoDB", icon: "◈", color: "#47A248" },
+  { name: "TypeScript", icon: "TS", color: "#3178C6" },
+  { name: "JavaScript", icon: "JS", color: "#F7DF1E" },
+  { name: "Tailwind CSS", icon: "◐", color: "#06B6D4" },
+  { name: "Firebase", icon: "◭", color: "#FFCA28" },
+  { name: "JWT", icon: "◘", color: "#000000" },
+  { name: "REST APIs", icon: "◇", color: "#FF6C37" },
+  { name: "Redux Toolkit", icon: "◉", color: "#764ABC" },
+  { name: "Git & GitHub", icon: "◎", color: "#F05032" },
 ];
 
 const ExpertiseMarquee = () => {
   const sectionRef = useRef(null);
+  const containerRef = useRef(null);
+  const shouldReduceMotion = useReducedMotion();
+
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
-  // Triple the list for a seamless, ultra-long loop
-  const tripledSkills = useMemo(
-    () => [...EXPERTISE, ...EXPERTISE, ...EXPERTISE],
-    [],
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], [40, -40]);
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.15, 0.85, 1],
+    [0, 1, 1, 0],
   );
+
+  const skills = useMemo(() => [...EXPERTISE, ...EXPERTISE], []);
 
   return (
     <section
@@ -34,106 +51,108 @@ const ExpertiseMarquee = () => {
       className="relative section-spacing bg-base-100 overflow-hidden"
       aria-labelledby="expertise-heading"
     >
-      {/* Subtle Background Ambience */}
-      <div className="absolute inset-0 pointer-events-none opacity-30">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 blur-[120px] rounded-full animate-floaty" />
-        <div
-          className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/10 blur-[120px] rounded-full animate-floaty"
-          style={{ animationDelay: "2s" }}
-        />
+      {/* Ambient Background */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        style={{ opacity }}
+      >
+        <div className="absolute top-1/3 left-1/4 w-100 h-100 bg-primary/5 blur-[120px] rounded-full" />
+        <div className="absolute bottom-1/4 right-1/3 w-87.5 h-87.5 bg-accent/5 blur-[120px] rounded-full" />
+      </motion.div>
+
+      {/* Header */}
+      <div className="container-page mb-14 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="max-w-3xl"
+        >
+          <span className="text-xs tracking-[0.35em] font-black uppercase text-primary">
+            Expertise
+          </span>
+
+          <h2
+            id="expertise-heading"
+            className="mt-4 text-4xl md:text-5xl lg:text-6xl font-black tracking-tight"
+          >
+            Technical Expertise
+          </h2>
+
+          <p className="mt-5 text-base-content/60 text-sm md:text-base leading-relaxed max-w-2xl">
+            A carefully selected stack focused on scalability, performance, and
+            production-grade architecture.
+          </p>
+        </motion.div>
       </div>
 
-      {/* Header Section */}
-      <div className="container-page mb-16 relative z-10">
-        <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8 }}
-          >
-            <span className="text-[10px] font-black tracking-[0.4em] uppercase text-primary block mb-3">
-              Technical Stack
-            </span>
-            <h2
-              id="expertise-heading"
-              className="text-5xl md:text-7xl font-black tracking-tighter leading-none"
+      {/* Marquee */}
+      <motion.div
+        ref={containerRef}
+        className="relative space-y-8"
+        style={{ y }}
+      >
+        {[1, 2].map((row) => (
+          <div key={row} className="flex overflow-hidden group">
+            <motion.div
+              className="flex gap-5 lg:gap-6 flex-none py-3 will-change-transform"
+              animate={
+                shouldReduceMotion
+                  ? {}
+                  : row === 1
+                    ? { x: ["0%", "-50%"] }
+                    : { x: ["-50%", "0%"] }
+              }
+              transition={{
+                duration: row === 1 ? 60 : 55,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+              whileHover={{ animationPlayState: "paused" }}
             >
-              My <span className="text-gradient">Arsenal.</span>
-            </h2>
-          </motion.div>
+              {skills.map((skill, idx) => (
+                <SkillCard key={`${row}-${idx}`} skill={skill} />
+              ))}
+            </motion.div>
+          </div>
+        ))}
+      </motion.div>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            transition={{ delay: 0.3 }}
-            className="text-base-content/50 font-medium max-w-xs md:text-right text-sm md:text-base leading-relaxed"
-          >
-            A production-ready stack focused on performance, scalability, and
-            exceptional user experience.
-          </motion.p>
-        </div>
-      </div>
-
-      {/* Marquee Container - Slightly tilted for modern "Bento" aesthetic */}
-      <div className="relative py-4 space-y-6 md:space-y-10">
-        {/* Row 1: Left to Right */}
-        <div className="flex overflow-hidden mask-fade-edges">
-          <motion.div
-            className="flex gap-4 md:gap-8 flex-none py-4"
-            animate={{ x: ["0%", "-33.33%"] }}
-            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-          >
-            {tripledSkills.map((skill, idx) => (
-              <SkillCard key={`row1-${idx}`} label={skill} />
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Row 2: Right to Left (Slightly faster) */}
-        <div className="flex overflow-hidden mask-fade-edges">
-          <motion.div
-            className="flex gap-4 md:gap-8 flex-none py-4"
-            animate={{ x: ["-33.33%", "0%"] }}
-            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          >
-            {tripledSkills.map((skill, idx) => (
-              <SkillCard key={`row2-${idx}`} label={skill} secondary />
-            ))}
-          </motion.div>
-        </div>
-      </div>
+      {/* Bottom Fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-linear-to-t from-base-100 to-transparent pointer-events-none" />
     </section>
   );
-};
+};git add
 
-const SkillCard = ({ label, secondary = false }) => {
+const SkillCard = ({ skill }) => {
   return (
     <motion.div
-      whileHover={{ y: -8, scale: 1.02 }}
-      className={`
-        relative flex items-center gap-4 px-8 py-4 md:px-12 md:py-6
-        rounded-2xl transition-all duration-500 cursor-default select-none
-        border backdrop-blur-md
-        ${
-          secondary
-            ? "bg-primary text-primary-content border-primary/20 shadow-xl shadow-primary/10"
-            : "bg-base-200/40 text-base-content border-base-content/5 shadow-sm hover:border-primary/30"
-        }
-      `}
+      whileHover={{
+        y: -4,
+        scale: 1.02,
+      }}
+      transition={{ type: "spring", stiffness: 260, damping: 20 }}
+      className="
+        relative flex items-center gap-4
+        px-6 py-4 lg:px-8 lg:py-5
+        rounded-2xl border border-base-content/10
+        bg-base-200/60 backdrop-blur-xl
+        text-base font-semibold
+        text-base-content whitespace-nowrap
+        transition-all duration-300
+        hover:border-primary/40
+        hover:shadow-lg hover:shadow-primary/10
+      "
     >
-      {/* Static Shimmer on hover via CSS classes defined in your index.css */}
-      <div className="absolute inset-0 shimmer opacity-0 group-hover:opacity-100 transition-opacity" />
-
-      <span className="text-xl md:text-3xl font-black uppercase tracking-tighter italic">
-        {label}
+      <span
+        aria-hidden="true"
+        className="text-2xl"
+        style={{ color: skill.color }}
+      >
+        {skill.icon}
       </span>
 
-      {/* Aesthetic Signal Dot */}
-      <div
-        className={`h-2 w-2 rounded-full ${
-          secondary ? "bg-primary-content/40" : "bg-primary animate-pulse"
-        }`}
-      />
+      <span className="tracking-tight">{skill.name}</span>
     </motion.div>
   );
 };

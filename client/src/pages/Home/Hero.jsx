@@ -5,10 +5,9 @@ import {
   useTransform,
   useSpring,
   useScroll,
-  useMotionTemplate,
   AnimatePresence,
 } from "motion/react";
-import { useContext, useEffect, useState, useRef, useMemo } from "react";
+import { useContext, useEffect, useState, useRef, memo } from "react";
 import { Link } from "react-router";
 import {
   FaGithub,
@@ -19,7 +18,6 @@ import {
   FaPaperPlane,
   FaCheck,
   FaSpinner,
-  FaArrowDown,
 } from "react-icons/fa";
 import {
   SiReact,
@@ -34,63 +32,94 @@ import ThemeContext from "../../contexts/ThemeContext";
 import profileLight from "../../assets/white.png";
 import profileDark from "../../assets/dark.png";
 
-// OPTIMIZED STATIC PARTICLES - Fewer particles, better performance
+// OPTIMIZED STATIC PARTICLES - Minimal for performance
 const STATIC_PARTICLES = [
-  { id: 1, left: "12%", top: "18%", size: 2, duration: 6, delay: 0 },
-  { id: 2, left: "88%", top: "25%", size: 1.5, duration: 5.5, delay: 1.2 },
-  { id: 3, left: "22%", top: "65%", size: 1, duration: 5.8, delay: 0.6 },
-  { id: 4, left: "78%", top: "72%", size: 2, duration: 6.2, delay: 1.8 },
-  { id: 5, left: "45%", top: "35%", size: 1.5, duration: 5.3, delay: 2.1 },
+  { id: 1, left: "15%", top: "20%", size: 2, duration: 6.5, delay: 0 },
+  { id: 2, left: "85%", top: "28%", size: 1.5, duration: 5.8, delay: 1.5 },
+  { id: 3, left: "25%", top: "68%", size: 1, duration: 6.2, delay: 0.8 },
+  { id: 4, left: "75%", top: "75%", size: 2, duration: 6.8, delay: 2 },
 ];
 
-// TECH STACK - Memoized
+// TECH STACK - Static memoized array
 const TECH_STACK = [
-  {
-    Icon: SiMongodb,
-    color: "#47A248",
-    name: "MongoDB",
-    gradient: "from-green-400 to-green-600",
-  },
-  {
-    Icon: SiExpress,
-    color: "currentColor",
-    name: "Express.js",
-    gradient: "from-gray-400 to-gray-600",
-  },
-  {
-    Icon: SiReact,
-    color: "#61DAFB",
-    name: "React.js",
-    gradient: "from-cyan-400 to-blue-500",
-  },
-  {
-    Icon: SiNodedotjs,
-    color: "#339933",
-    name: "Node.js",
-    gradient: "from-green-500 to-green-700",
-  },
-  {
-    Icon: SiTailwindcss,
-    color: "#06B6D4",
-    name: "Tailwind",
-    gradient: "from-cyan-400 to-cyan-600",
-  },
-  {
-    Icon: SiJavascript,
-    color: "#F7DF1E",
-    name: "JavaScript",
-    gradient: "from-yellow-400 to-yellow-600",
-  },
+  { Icon: SiMongodb, color: "#47A248", name: "MongoDB" },
+  { Icon: SiExpress, color: "currentColor", name: "Express.js" },
+  { Icon: SiReact, color: "#61DAFB", name: "React.js" },
+  { Icon: SiNodedotjs, color: "#339933", name: "Node.js" },
+  { Icon: SiTailwindcss, color: "#06B6D4", name: "Tailwind CSS" },
+  { Icon: SiJavascript, color: "#F7DF1E", name: "JavaScript" },
 ];
 
-// Typing animation words
+// Typing animation words - Optimized
 const TYPING_WORDS = ["Scalable.", "Fast.", "Beautiful.", "Modern."];
+
+// Memoized Particle Component for better performance
+const Particle = memo(({ particle, shouldAnimate }) => (
+  <motion.div
+    className="absolute rounded-full bg-primary/30 will-change-transform"
+    style={{
+      left: particle.left,
+      top: particle.top,
+      width: `${particle.size}px`,
+      height: `${particle.size}px`,
+    }}
+    animate={
+      shouldAnimate
+        ? {
+            y: [0, -25, 0],
+            opacity: [0, 0.65, 0],
+            scale: [0.8, 1.2, 0.8],
+          }
+        : {}
+    }
+    transition={{
+      duration: particle.duration,
+      delay: particle.delay,
+      repeat: Infinity,
+      ease: "easeInOut",
+    }}
+  />
+));
+Particle.displayName = "Particle";
+
+// Memoized Tech Icon Component
+const TechIcon = memo(({ tech, index, isVisible, enableAnimations }) => (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.5 }}
+    animate={isVisible ? { opacity: 1, scale: 1 } : {}}
+    transition={{ delay: 0.7 + index * 0.05, duration: 0.4 }}
+    whileHover={
+      enableAnimations
+        ? {
+            y: -6,
+            scale: 1.15,
+          }
+        : {}
+    }
+    className="relative group"
+  >
+    <div className="p-3 rounded-xl bg-base-200/50 border border-base-content/5 backdrop-blur-sm transition-all duration-300 group-hover:border-primary/30 group-hover:shadow-lg group-hover:shadow-primary/10">
+      <tech.Icon
+        className="text-2xl lg:text-3xl transition-colors duration-300"
+        style={{ color: tech.color }}
+        title={tech.name}
+      />
+    </div>
+    <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+      <span className="text-xs font-semibold text-base-content/70 whitespace-nowrap">
+        {tech.name}
+      </span>
+    </div>
+  </motion.div>
+));
+TechIcon.displayName = "TechIcon";
 
 const Hero = () => {
   const [downloadState, setDownloadState] = useState("idle");
   const { theme } = useContext(ThemeContext);
   const profileImg = theme === "light" ? profileLight : profileDark;
   const sectionRef = useRef(null);
+  const containerRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const [enableAnimations, setEnableAnimations] = useState(true);
@@ -99,17 +128,15 @@ const Hero = () => {
   const [text, setText] = useState("");
   const [delta, setDelta] = useState(150);
 
-  const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
   });
 
-  // Smooth parallax transforms
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  // Smooth parallax - Only opacity for performance
   const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.8, 0]);
 
-  /* ================= TYPING EFFECT ================= */
+  /* ================= TYPING EFFECT - Optimized ================= */
   useEffect(() => {
     if (!isVisible || !enableAnimations) return;
 
@@ -122,7 +149,7 @@ const Hero = () => {
 
         if (text === fullText) {
           setIsDeleting(true);
-          setDelta(2000); // Pause before deleting
+          setDelta(2000);
         }
       } else {
         setText(fullText.substring(0, text.length - 1));
@@ -139,7 +166,7 @@ const Hero = () => {
     return () => clearInterval(ticker);
   }, [text, delta, isDeleting, currentWord, isVisible, enableAnimations]);
 
-  /* ================= DEVICE DETECTION (Optimized) ================= */
+  /* ================= DEVICE DETECTION ================= */
   useEffect(() => {
     const checkDevice = () => {
       const desktop = window.innerWidth > 1024;
@@ -148,6 +175,7 @@ const Hero = () => {
     };
 
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setEnableAnimations(!motionQuery.matches);
 
     checkDevice();
@@ -155,7 +183,7 @@ const Hero = () => {
     let resizeTimer;
     const handleResize = () => {
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(checkDevice, 150);
+      resizeTimer = setTimeout(checkDevice, 200);
     };
 
     window.addEventListener("resize", handleResize, { passive: true });
@@ -189,15 +217,15 @@ const Hero = () => {
     };
   }, []);
 
-  /* ================= MOUSE PARALLAX (Optimized) ================= */
+  /* ================= MOUSE PARALLAX - Ultra Optimized ================= */
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  const smoothMouseX = useSpring(mouseX, { stiffness: 50, damping: 20 });
-  const smoothMouseY = useSpring(mouseY, { stiffness: 50, damping: 20 });
+  const smoothMouseX = useSpring(mouseX, { stiffness: 40, damping: 25 });
+  const smoothMouseY = useSpring(mouseY, { stiffness: 40, damping: 25 });
 
-  const rotateX = useTransform(smoothMouseY, [-300, 300], [2, -2]);
-  const rotateY = useTransform(smoothMouseX, [-300, 300], [-2, 2]);
+  const rotateX = useTransform(smoothMouseY, [-300, 300], [1.5, -1.5]);
+  const rotateY = useTransform(smoothMouseX, [-300, 300], [-1.5, 1.5]);
 
   useEffect(() => {
     if (!isDesktop || !isVisible || !enableAnimations) return;
@@ -205,7 +233,7 @@ const Hero = () => {
     let rafId = null;
     let lastX = 0;
     let lastY = 0;
-    const threshold = 8;
+    const threshold = 10; // Increased threshold for less frequent updates
 
     const handleMouseMove = (e) => {
       const dx = Math.abs(e.clientX - lastX);
@@ -254,41 +282,38 @@ const Hero = () => {
   const shouldAnimate = isVisible && enableAnimations;
   const shouldAnimateBackground = shouldAnimate && isDesktop;
 
- 
-  const gradientBackground = useMotionTemplate`radial-gradient(circle at ${smoothMouseX}px ${smoothMouseY}px, rgba(37, 99, 235, 0.15), transparent 50%)`;
-
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-base-100 min-h-screen flex items-center"
+      className="relative bg-base-100 flex items-center"
       aria-label="Hero Section"
     >
       <h1 className="sr-only">
         Md. Toyob Uddin Hridoy - Full Stack MERN Developer
       </h1>
 
-      {/* ================= ANIMATED BACKGROUND ================= */}
+      {/* ================= OPTIMIZED BACKGROUND ================= */}
       <motion.div
         ref={containerRef}
         className="absolute inset-0 pointer-events-none overflow-hidden"
         style={{ opacity }}
       >
-        {/* Dynamic Gradient Orbs */}
+        {/* Gradient Orb 1 - Using proper Tailwind classes */}
         <motion.div
-          className="absolute -top-1/3 -left-1/3 w-[60%] h-[60%] rounded-full opacity-40"
+          className="absolute -top-1/3 -left-1/3 w-[60%] h-[60%] rounded-full opacity-40 will-change-transform"
           style={{
             background:
               theme === "light"
-                ? "radial-gradient(circle, rgba(37, 99, 235, 0.12), transparent 70%)"
-                : "radial-gradient(circle, rgba(56, 189, 248, 0.15), transparent 70%)",
+                ? "radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, transparent 70%)"
+                : "radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%)",
             filter: "blur(80px)",
           }}
           animate={
             shouldAnimateBackground
               ? {
-                  scale: [1, 1.1, 1],
-                  x: [0, 30, 0],
-                  y: [0, -20, 0],
+                  scale: [1, 1.08, 1],
+                  x: [0, 25, 0],
+                  y: [0, -15, 0],
                 }
               : {}
           }
@@ -299,21 +324,22 @@ const Hero = () => {
           }}
         />
 
+        {/* Gradient Orb 2 */}
         <motion.div
-          className="absolute -bottom-1/3 -right-1/3 w-[55%] h-[55%] rounded-full opacity-35"
+          className="absolute -bottom-1/3 -right-1/3 w-[55%] h-[55%] rounded-full opacity-35 will-change-transform"
           style={{
             background:
               theme === "light"
-                ? "radial-gradient(circle, rgba(124, 58, 237, 0.10), transparent 70%)"
-                : "radial-gradient(circle, rgba(167, 139, 250, 0.12), transparent 70%)",
+                ? "radial-gradient(circle, rgba(124, 58, 237, 0.10) 0%, transparent 70%)"
+                : "radial-gradient(circle, rgba(167, 139, 250, 0.12) 0%, transparent 70%)",
             filter: "blur(80px)",
           }}
           animate={
             shouldAnimateBackground
               ? {
-                  scale: [1, 1.15, 1],
-                  x: [0, -30, 0],
-                  y: [0, 20, 0],
+                  scale: [1, 1.12, 1],
+                  x: [0, -25, 0],
+                  y: [0, 18, 0],
                 }
               : {}
           }
@@ -324,33 +350,13 @@ const Hero = () => {
           }}
         />
 
-        {/* Floating Particles - Desktop Only */}
+        {/* Floating Particles - Memoized */}
         {shouldAnimateBackground &&
           STATIC_PARTICLES.map((p) => (
-            <motion.div
-              key={p.id}
-              className="absolute rounded-full bg-primary/30"
-              style={{
-                left: p.left,
-                top: p.top,
-                width: `${p.size}px`,
-                height: `${p.size}px`,
-              }}
-              animate={{
-                y: [0, -25, 0],
-                opacity: [0, 0.7, 0],
-                scale: [0.8, 1.2, 0.8],
-              }}
-              transition={{
-                duration: p.duration,
-                delay: p.delay,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            />
+            <Particle key={p.id} particle={p} shouldAnimate={shouldAnimate} />
           ))}
 
-        {/* Grid Pattern Overlay */}
+        {/* Grid Pattern - Static, no animation */}
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
@@ -361,7 +367,7 @@ const Hero = () => {
       </motion.div>
 
       {/* ================= MAIN CONTENT ================= */}
-      <div className="container-page relative z-10 py-20 lg:py-0">
+      <div className="container-page relative z-10 section-spacing">
         <div className="flex flex-col-reverse lg:flex-row items-center gap-16 lg:gap-20">
           {/* ================= TEXT CONTENT ================= */}
           <motion.div
@@ -386,6 +392,7 @@ const Hero = () => {
                 <motion.div
                   animate={shouldAnimate ? { rotate: 360 } : {}}
                   transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                  className="will-change-transform"
                 >
                   <FaRocket className="text-primary text-sm" />
                 </motion.div>
@@ -411,7 +418,7 @@ const Hero = () => {
                   <motion.span
                     animate={{ opacity: [1, 0] }}
                     transition={{ duration: 0.5, repeat: Infinity }}
-                    className="inline-block w-1 h-[0.9em] bg-primary ml-1 align-middle"
+                    className="inline-block w-1 h-[0.9em] bg-primary ml-1 align-middle will-change-[opacity]"
                   />
                 </span>
                 <br />
@@ -432,7 +439,7 @@ const Hero = () => {
               <span className="text-base-content font-bold relative inline-block">
                 Md. Toyob Uddin Hridoy
                 <motion.span
-                  className="absolute bottom-0 left-0 h-[2px] bg-primary"
+                  className="absolute bottom-0 left-0 h-0.5 bg-primary will-change-[width]"
                   initial={{ width: 0 }}
                   animate={isVisible ? { width: "100%" } : {}}
                   transition={{ delay: 0.8, duration: 0.5 }}
@@ -467,7 +474,7 @@ const Hero = () => {
                 </Link>
               </motion.div>
 
-              {/* Resume Button with State */}
+              {/* Resume Button */}
               <motion.div
                 whileHover={enableAnimations ? { scale: 1.04, y: -3 } : {}}
                 whileTap={enableAnimations ? { scale: 0.96 } : {}}
@@ -475,9 +482,9 @@ const Hero = () => {
                 <button
                   onClick={handleDownloadResume}
                   disabled={downloadState === "loading"}
-                  className={`btn-cta-soft group min-w-[140px] transition-all duration-300 ${
+                  className={`btn-cta-soft group min-w-35 transition-all duration-300 ${
                     downloadState === "success"
-                      ? "!bg-green-500 !text-white !border-green-500"
+                      ? "bg-green-500! text-white! border-green-500!"
                       : ""
                   }`}
                 >
@@ -559,7 +566,7 @@ const Hero = () => {
               </div>
             </motion.div>
 
-            {/* ================= TECH STACK MARQUEE ================= */}
+            {/* ================= TECH STACK ================= */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={isVisible ? { opacity: 1 } : {}}
@@ -570,37 +577,14 @@ const Hero = () => {
                 Tech Stack
               </p>
               <div className="flex flex-wrap justify-center lg:justify-start gap-5 lg:gap-6">
-                {TECH_STACK.map(({ Icon, color, name, gradient }, index) => (
-                  <motion.div
-                    key={name}
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={isVisible ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ delay: 0.7 + index * 0.05, duration: 0.4 }}
-                    whileHover={
-                      enableAnimations
-                        ? {
-                            y: -6,
-                            scale: 1.15,
-                            rotate: [0, -5, 5, 0],
-                          }
-                        : {}
-                    }
-                    className="relative group"
-                  >
-                    <div className="p-3 rounded-xl bg-base-200/50 border border-base-content/5 backdrop-blur-sm transition-all duration-300 group-hover:border-primary/30 group-hover:shadow-lg group-hover:shadow-primary/10">
-                      <Icon
-                        className="text-2xl lg:text-3xl transition-colors duration-300"
-                        style={{ color }}
-                        title={name}
-                      />
-                    </div>
-                    {/* Tooltip */}
-                    <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                      <span className="text-xs font-semibold text-base-content/70 whitespace-nowrap">
-                        {name}
-                      </span>
-                    </div>
-                  </motion.div>
+                {TECH_STACK.map((tech, index) => (
+                  <TechIcon
+                    key={tech.name}
+                    tech={tech}
+                    index={index}
+                    isVisible={isVisible}
+                    enableAnimations={enableAnimations}
+                  />
                 ))}
               </div>
             </motion.div>
@@ -623,17 +607,17 @@ const Hero = () => {
             <div className="relative w-full max-w-md mx-auto group perspective-container">
               {/* Animated Glow Ring */}
               <motion.div
-                className="absolute -inset-10 rounded-full opacity-40 blur-3xl"
+                className="absolute -inset-10 rounded-full opacity-40 blur-3xl will-change-transform"
                 style={{
                   background:
                     theme === "light"
-                      ? "linear-gradient(135deg, rgba(37, 99, 235, 0.3), rgba(124, 58, 237, 0.2))"
-                      : "linear-gradient(135deg, rgba(56, 189, 248, 0.3), rgba(167, 139, 250, 0.25))",
+                      ? "linear-gradient(135deg, rgba(37, 99, 235, 0.3) 0%, rgba(124, 58, 237, 0.2) 100%)"
+                      : "linear-gradient(135deg, rgba(56, 189, 248, 0.3) 0%, rgba(167, 139, 250, 0.25) 100%)",
                 }}
                 animate={
                   shouldAnimateBackground
                     ? {
-                        scale: [1, 1.1, 1],
+                        scale: [1, 1.08, 1],
                         rotate: [0, 90, 0],
                       }
                     : {}
@@ -647,7 +631,7 @@ const Hero = () => {
 
               {/* Profile Container with 3D Effect */}
               <motion.div
-                className="relative z-10 aspect-[4/5] rounded-[3rem] overflow-hidden border-4 border-base-100 shadow-2xl"
+                className="relative z-10 aspect-4/5 rounded-[3rem] overflow-hidden border-4 border-base-100 shadow-2xl"
                 whileHover={
                   enableAnimations
                     ? {
@@ -678,10 +662,10 @@ const Hero = () => {
                       repeat: Infinity,
                       ease: "linear",
                     }}
-                    className="absolute left-0 w-full h-[2px] pointer-events-none"
+                    className="absolute left-0 w-full h-0.5 pointer-events-none will-change-transform"
                     style={{
                       background:
-                        "linear-gradient(to right, transparent, rgba(37, 99, 235, 0.4), transparent)",
+                        "linear-gradient(to right, transparent 0%, rgba(37, 99, 235, 0.4) 50%, transparent 100%)",
                       boxShadow: "0 0 20px rgba(37, 99, 235, 0.6)",
                     }}
                   />
@@ -692,7 +676,7 @@ const Hero = () => {
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                   style={{
                     background:
-                      "linear-gradient(to top, rgba(0,0,0,0.3), transparent)",
+                      "linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 100%)",
                   }}
                 />
               </motion.div>
@@ -736,7 +720,7 @@ const Hero = () => {
               {/* Decorative Ring Animation */}
               {shouldAnimateBackground && (
                 <motion.div
-                  className="absolute inset-0 rounded-[3rem] border-2 border-primary/20 pointer-events-none"
+                  className="absolute inset-0 rounded-[3rem] border-2 border-primary/20 pointer-events-none will-change-transform"
                   animate={{
                     scale: [1, 1.05, 1],
                     opacity: [0.3, 0.6, 0.3],
@@ -751,34 +735,6 @@ const Hero = () => {
             </div>
           </motion.div>
         </div>
-
-        {/* ================= SCROLL INDICATOR ================= */}
-       {/*  <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 1, duration: 0.6 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-2"
-        >
-          <span className="text-xs uppercase tracking-widest text-base-content/50 font-bold">
-            Scroll
-          </span>
-          <motion.div
-            animate={
-              shouldAnimate
-                ? {
-                    y: [0, 8, 0],
-                  }
-                : {}
-            }
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          >
-            <FaArrowDown className="text-base-content/40" />
-          </motion.div>
-        </motion.div> */}
       </div>
     </section>
   );

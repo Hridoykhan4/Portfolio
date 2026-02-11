@@ -8,7 +8,7 @@ import ContactForm from "../Contact/ContactForm";
 const Home = () => {
   return (
     <section>
-      <ScrollReveal>
+      {/* <ScrollReveal>
         <Hero />
       </ScrollReveal>
 
@@ -18,14 +18,14 @@ const Home = () => {
 
       <ScrollReveal delay={0.2}>
         <ExpertiseMarquee />
-      </ScrollReveal>
+      </ScrollReveal> */}
 
       <ScrollReveal delay={0.3}>
         <AcademicSnapshot />
       </ScrollReveal>
 
-      {/* Inside Home.jsx */}
-      <ScrollReveal delay={0.4}>
+      
+     {/*  <ScrollReveal delay={0.4}>
         <section className="relative overflow-hidden py-20">
           <div className="container-page">
             <div className="relative rounded-[2.5rem] bg-base-200/50 backdrop-blur-xl border border-base-content/5 p-10 md:p-16">
@@ -41,7 +41,7 @@ const Home = () => {
                   your email to start a conversation.
                 </p>
 
-                {/* This is where the magic happens */}
+          
                 <ContactForm variant="minimal" />
 
                 <p className="mt-6 text-xs text-base-content/40 font-medium">
@@ -51,7 +51,7 @@ const Home = () => {
             </div>
           </div>
         </section>
-      </ScrollReveal>
+      </ScrollReveal> */}
     </section>
   );
 };
