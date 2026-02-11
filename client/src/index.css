@@ -114,6 +114,7 @@
     @apply transition-colors duration-500;
     scroll-behavior: auto;
     scrollbar-gutter: stable;
+    position: relative;
   }
 
   body {

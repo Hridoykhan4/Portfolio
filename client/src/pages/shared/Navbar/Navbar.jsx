@@ -70,7 +70,6 @@ const Navbar = () => {
   const rotateX = useTransform(mouseY, [-300, 300], [3, -3]);
   const rotateY = useTransform(mouseX, [-300, 300], [-3, 3]);
 
- 
   const isContactPage = location.pathname === "/contact";
 
   useEffect(() => {

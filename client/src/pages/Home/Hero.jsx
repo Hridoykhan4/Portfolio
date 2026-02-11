@@ -686,7 +686,7 @@ const Hero = () => {
                 initial={{ opacity: 0, x: 20, y: 10 }}
                 animate={isVisible ? { opacity: 1, x: 0, y: 0 } : {}}
                 transition={{ delay: 0.6, duration: 0.5, type: "spring" }}
-                className="absolute -top-4 -right-6 lg:-right-10 z-20 badge-glass py-3 px-5 flex items-center gap-3 shadow-xl"
+                className="absolute -top-4 -right-4 lg:-right-10 z-20 badge-glass py-3 px-5 flex items-center gap-3 shadow-xl"
                 whileHover={enableAnimations ? { scale: 1.08, rotate: 3 } : {}}
                 style={{
                   transformStyle: "preserve-3d",
@@ -704,7 +704,7 @@ const Hero = () => {
                 initial={{ opacity: 0, x: -20, y: 10 }}
                 animate={isVisible ? { opacity: 1, x: 0, y: 0 } : {}}
                 transition={{ delay: 0.7, duration: 0.5, type: "spring" }}
-                className="absolute -bottom-4 -left-6 lg:-left-10 z-20 badge-glass py-3 px-5 flex items-center gap-3 shadow-xl"
+                className="absolute -bottom-4 -left-4 lg:-left-10 z-20 badge-glass py-3 px-5 flex items-center gap-3 shadow-xl"
                 whileHover={enableAnimations ? { scale: 1.08, rotate: -3 } : {}}
                 style={{
                   transformStyle: "preserve-3d",

@@ -146,7 +146,7 @@ const CustomCursor = () => {
     <>
       {/* Main Cursor Ring */}
       <motion.div
-        className="fixed pointer-events-none z-[9999]"
+        className="fixed pointer-events-none z-9999"
         style={{
           x: cursorXSpring,
           y: cursorYSpring,
