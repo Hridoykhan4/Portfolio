@@ -285,7 +285,7 @@ const Hero = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-base-100 flex items-center"
+      className="relative w-full bg-base-100 flex items-center"
       aria-label="Hero Section"
     >
       <h1 className="sr-only">
@@ -367,7 +367,10 @@ const Hero = () => {
       </motion.div>
 
       {/* ================= MAIN CONTENT ================= */}
-      <div className="container-page relative z-10 section-spacing">
+      <div
+        style={{ perspective: "1000px" }}
+        className="container-page relative z-10 section-spacing"
+      >
         <div className="flex flex-col-reverse lg:flex-row items-center gap-16 lg:gap-20">
           {/* ================= TEXT CONTENT ================= */}
           <motion.div

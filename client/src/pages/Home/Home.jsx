@@ -1,5 +1,5 @@
 import Hero from "./Hero";
-import ScrollReveal from "../../components/ScrollReveal";
+
 import ExpertiseMarquee from "./ExpertiseMarquee";
 import FeaturedProjects from "./FeaturedProjects";
 import AcademicSnapshot from "./AcademicSnapshot";
@@ -8,25 +8,15 @@ import NewsletterSection from "./NewsLetterSection";
 const Home = () => {
   return (
     <section>
-      <ScrollReveal>
-        <Hero />
-      </ScrollReveal>
+      <Hero />
 
-      <ScrollReveal delay={0.1}>
-        <FeaturedProjects />
-      </ScrollReveal>
+      <FeaturedProjects />
 
-      <ScrollReveal delay={0.2}>
-        <ExpertiseMarquee />
-      </ScrollReveal>
+      <ExpertiseMarquee />
 
-      <ScrollReveal delay={0.3}>
-        <AcademicSnapshot />
-      </ScrollReveal>
+      <AcademicSnapshot />
 
-      <ScrollReveal delay={0.4}>
-        <NewsletterSection></NewsletterSection>
-      </ScrollReveal>
+      <NewsletterSection></NewsletterSection>
     </section>
   );
 };

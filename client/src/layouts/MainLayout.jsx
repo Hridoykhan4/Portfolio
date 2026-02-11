@@ -3,8 +3,8 @@ import { useEffect, useRef } from "react";
 import Navbar from "../pages/shared/Navbar/Navbar";
 import Footer from "../pages/shared/Footer/Footer";
 import SmoothScroll from "../components/SmoothScroll";
-import CustomCursor from "../components/CustomCursor";
 import LoadingSpinner from "../components/LoadingSpinner";
+import SmoothCursor from "../components/SmoothCursor";
 
 const MainLayout = () => {
   const { pathname } = useLocation();
@@ -38,7 +38,9 @@ const MainLayout = () => {
 
   return (
     <SmoothScroll>
-      <CustomCursor />
+      <div className="hidden lg:block">
+        <SmoothCursor></SmoothCursor>
+      </div>
       <div className=" flex flex-col selection:bg-primary/30">
         <Navbar />
         <main

@@ -113,14 +113,21 @@
     font-family: "Inter", "Plus Jakarta Sans", system-ui, sans-serif;
     @apply transition-colors duration-500;
     scroll-behavior: auto;
-    scrollbar-gutter: stable;
     position: relative;
+    scrollbar-gutter: stable;
+    max-width: 100%;
+    overflow-y: scroll; 
+    height: 100%;
+    
   }
 
   body {
     @apply bg-base-100 text-base-content min-h-screen ;
     -webkit-font-smoothing: antialiased;
     position: relative;
+    scrollbar-gutter: stable;
+    min-height: 100%;
+    overflow-y: visible;
   }
 
    ::selection {
@@ -443,19 +450,6 @@
    CURSOR CUSTOMIZATION
   ================================================================ */
 
-/* Hide default cursor on desktop */
-@media (hover: hover) {
-  * {
-    cursor: none !important;
-  }
-  
-  /* Keep default cursor for inputs and text areas */
-  input,
-  textarea,
-  select {
-    cursor: text !important;
-  }
-}
 
 /* Smooth scroll optimization */
 html {
@@ -487,21 +481,16 @@ body {
 }
 
 /* ================================================================
-   CURSOR INTERACTION HELPERS
-  ================================================================ */
 
-/* Add cursor-pointer class to any element you want interactive cursor on */
-.cursor-pointer {
-  position: relative;
+
+/* 1. Target the root div React creates */
+#root {
+  overflow-x: hidden;
+  /* Ensure the root doesn't create a second vertical scrollbar */
+  overflow-y: visible; 
 }
 
-/* Cursor magnetic effect (optional) */
-@media (hover: hover) {
-  .cursor-magnetic {
-    transition: transform 0.2s ease-out;
-  }
-  
-  .cursor-magnetic:hover {
-    transform: scale(1.05);
-  }
+/* 2. Target the ScrollReveal containers specifically */
+div[style*="opacity"] {
+  overflow: visible !important;
 }

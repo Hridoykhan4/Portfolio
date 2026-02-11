@@ -19,7 +19,7 @@ const NewsletterSection = () => {
   ];
 
   return (
-    <section className="relative overflow-hidden py-12 md:py-16 lg:py-24">
+    <section className="relative overflow-hidden section-spacing">
       {/* Ambient Background - Subtle on mobile */}
       <div className="absolute inset-0 pointer-events-none opacity-60 md:opacity-100">
         <div className="absolute top-1/2 left-1/4 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-primary/5 rounded-full blur-[80px] md:blur-[120px]" />

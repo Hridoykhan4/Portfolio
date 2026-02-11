@@ -1,17 +1,16 @@
-// eslint-disable-next-line no-unused-vars
-import { motion } from "motion/react";
-
+import { motion as Motion } from "motion/react";
 const ScrollReveal = ({ children, delay = 0 }) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
+    <Motion.div
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.6, ease: "easeOut", delay }}
+      style={{ overflow: "clip" }}
     >
       {children}
-    </motion.div>
+    </Motion.div>
   );
 };
 
-export default ScrollReveal;
+export default ScrollReveal
