@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { motion, AnimatePresence } from "motion/react";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
@@ -74,7 +75,7 @@ const ContactForm = ({ variant = "minimal" }) => {
             transition={{ duration: 0.4, ease: "easeOut" }}
             className="relative overflow-hidden"
           >
-            <div className="relative bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border border-primary/20 rounded-3xl p-8 md:p-12 text-center backdrop-blur-sm">
+            <div className="relative bg-linear-to-br from-primary/10 via-primary/5 to-transparent border border-primary/20 rounded-3xl p-8 md:p-12 text-center backdrop-blur-sm">
               {/* Success Animation Circle */}
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}

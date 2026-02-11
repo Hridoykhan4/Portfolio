@@ -10,24 +10,18 @@ import {
   FaMapMarkerAlt,
   FaArrowUp,
   FaCode,
+  FaWhatsapp,
 } from "react-icons/fa";
 
 const SOCIAL_LINKS = [
   {
-    name: "GitHub",
-    icon: FaGithub,
-    url: "https://github.com/Hridoykhan4",
-  },
-  {
     name: "LinkedIn",
     icon: FaLinkedinIn,
-    url: "https://www.linkedin.com/in/md-toyob-uddin-hridoy",
+    url: "https://linkedin.com/in/md-toyob-uddin-hridoy",
   },
-  {
-    name: "Twitter",
-    icon: FaTwitter,
-    url: "https://x.com/ToyobHridoy85",
-  },
+  { name: "GitHub", icon: FaGithub, url: "https://github.com/Hridoykhan4" },
+  { name: "Twitter", icon: FaTwitter, url: "https://x.com/ToyobHridoy85" },
+  { name: "WhatsApp", icon: FaWhatsapp, url: "https://wa.me/8801832148385" },
 ];
 
 const CONTACT_INFO = [
@@ -40,7 +34,7 @@ const CONTACT_INFO = [
   {
     icon: FaPhoneAlt,
     label: "Phone",
-    value: "+880 1832 148385",
+    value: "+880 1832-148385",
     href: "tel:+8801832148385",
   },
   {
@@ -50,7 +44,6 @@ const CONTACT_INFO = [
     href: "https://maps.google.com/?q=Khulshi,Chittagong,Bangladesh",
   },
 ];
-
 const Footer = () => {
   const [hoveredSocial, setHoveredSocial] = useState(null);
   const mouseX = useMotionValue(0);

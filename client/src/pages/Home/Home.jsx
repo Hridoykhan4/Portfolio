@@ -3,8 +3,7 @@ import ScrollReveal from "../../components/ScrollReveal";
 import ExpertiseMarquee from "./ExpertiseMarquee";
 import FeaturedProjects from "./FeaturedProjects";
 import AcademicSnapshot from "./AcademicSnapshot";
-import ContactForm from "../Contact/ContactForm";
-import NewsletterSection from "./NewsLetter";
+import NewsletterSection from "./NewsLetterSection";
 
 const Home = () => {
   return (

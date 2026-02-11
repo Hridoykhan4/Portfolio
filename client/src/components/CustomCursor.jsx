@@ -193,7 +193,7 @@ const CustomCursor = () => {
 
       {/* Center Dot */}
       <motion.div
-        className="fixed pointer-events-none z-[9999]"
+        className="fixed pointer-events-none z-9999"
         style={{
           x: cursorXSpring,
           y: cursorYSpring,
@@ -225,7 +225,7 @@ const CustomCursor = () => {
       {/* Trailing Effect (Optional - for premium feel) */}
       {isPointer && (
         <motion.div
-          className="fixed pointer-events-none z-[9998]"
+          className="fixed pointer-events-none z-9998"
           style={{
             x: cursorXSpring,
             y: cursorYSpring,
