@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import { motion } from "motion/react";
 import { FiMail, FiTrendingUp, FiCode, FiZap } from "react-icons/fi";
 import ContactForm from "../Contact/ContactForm";
@@ -22,8 +23,8 @@ const NewsletterSection = () => {
     <section className="relative overflow-hidden section-spacing">
       {/* Ambient Background - Subtle on mobile */}
       <div className="absolute inset-0 pointer-events-none opacity-60 md:opacity-100">
-        <div className="absolute top-1/2 left-1/4 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-primary/5 rounded-full blur-[80px] md:blur-[120px]" />
-        <div className="absolute bottom-0 right-1/4 w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-accent/5 rounded-full blur-[80px] md:blur-[120px]" />
+        <div className="absolute top-1/2 left-1/4 w-75 md:w-125 h-75 md:h-125 bg-primary/5 rounded-full blur-[80px] md:blur-[120px]" />
+        <div className="absolute bottom-0 right-1/4 w-62.5 md:w-100 h-62.5 md:h-100 bg-accent/5 rounded-full blur-[80px] md:blur-[120px]" />
       </div>
 
       <div className="container-page relative z-10">
@@ -100,8 +101,8 @@ const NewsletterSection = () => {
                       transition={{ delay: 0.35 + idx * 0.05, duration: 0.4 }}
                       className="flex items-center gap-3 p-3 md:p-4 rounded-xl md:rounded-2xl bg-base-200/40 border border-base-content/5 backdrop-blur-sm hover:bg-base-200/60 hover:border-primary/20 transition-all duration-300"
                     >
-                      <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                        <benefit.icon size={16} className="md:w-[18px] md:h-[18px]" />
+                      <div className="shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                        <benefit.icon size={16} className="md:w-4.5 md:h-4.5" />
                       </div>
                       <p className="text-xs md:text-sm font-semibold text-base-content/80 leading-tight">
                         {benefit.text}
