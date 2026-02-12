@@ -3,407 +3,428 @@ import { motion, useInView } from "motion/react";
 import { useRef } from "react";
 import { Link } from "react-router";
 import {
-  FaGraduationCap,
-  FaCode,
-  FaLaptopCode,
   FaGithub,
+  FaLinkedinIn,
+  FaGraduationCap,
+  FaMapMarkerAlt,
+  FaCode,
+  FaLayerGroup,
+  FaCalendarCheck,
+  FaRocket,
+  FaUsers,
+  FaLightbulb,
+  FaShieldAlt,
+  FaExternalLinkAlt,
   FaReact,
   FaNodeJs,
-  FaDatabase,
-  FaRocket,
-  FaLightbulb,
-  FaHeart,
-  FaCheckCircle,
-  FaExternalLinkAlt,
 } from "react-icons/fa";
 import {
   SiMongodb,
   SiExpress,
-  SiTailwindcss,
   SiJavascript,
+  SiTailwindcss,
 } from "react-icons/si";
 
-const TECH_PROFICIENCY = [
-  { name: "JavaScript", level: 80, icon: SiJavascript, color: "#F7DF1E" },
-  { name: "React.js", level: 85, icon: FaReact, color: "#61DAFB" },
-  { name: "Node.js", level: 75, icon: FaNodeJs, color: "#339933" },
-  { name: "MongoDB", level: 80, icon: SiMongodb, color: "#47A248" },
-  { name: "Express.js", level: 75, icon: SiExpress, color: "#000000" },
-  { name: "Tailwind CSS", level: 90, icon: SiTailwindcss, color: "#06B6D4" },
-];
-
+/* ========== VERIFIED DATA ========== */
 const GITHUB_STATS = [
-  { label: "Commits", value: "923+", icon: FaCode },
-  { label: "Repositories", value: "92+", icon: FaDatabase },
-  { label: "Active Days", value: "300+", icon: FaCheckCircle },
+  {
+    value: "923+",
+    label: "Total Commits",
+    icon: FaCode,
+    detail: "Consistent development",
+  },
+  {
+    value: "92+",
+    label: "Repositories",
+    icon: FaLayerGroup,
+    detail: "Full-stack projects",
+  },
+  {
+    value: "300+",
+    label: "Active Days",
+    icon: FaCalendarCheck,
+    detail: "Daily practice",
+  },
 ];
 
-const CORE_VALUES = [
+const TECH_STACK = [
+  { name: "JavaScript", icon: SiJavascript },
+  { name: "React.js", icon: FaReact },
+  { name: "Node.js", icon: FaNodeJs },
+  { name: "Express.js", icon: SiExpress },
+  { name: "MongoDB", icon: SiMongodb },
+  { name: "Tailwind CSS", icon: SiTailwindcss },
+];
+
+const BUSINESS_VALUE = [
+  {
+    icon: FaShieldAlt,
+    title: "Authentication & Security",
+    detail: "Built JWT-based auth systems with secure session management",
+  },
+  {
+    icon: FaLayerGroup,
+    title: "Scalable Architecture",
+    detail: "REST APIs designed for growth and maintainability",
+  },
+  {
+    icon: FaUsers,
+    title: "User-Centric Interfaces",
+    detail: "Responsive UIs with accessibility and performance in mind",
+  },
   {
     icon: FaLightbulb,
-    title: "Problem Solver",
-    description: "Breaking down complex challenges into elegant solutions",
-  },
-  {
-    icon: FaCode,
-    title: "Clean Code",
-    description: "Writing maintainable, well-documented, and testable code",
-  },
-  {
-    icon: FaRocket,
-    title: "Fast Learner",
-    description: "Continuously adapting to new technologies and best practices",
-  },
-  {
-    icon: FaHeart,
-    title: "Passionate",
-    description: "Genuinely excited about building great web experiences",
+    title: "Problem-Solving",
+    detail: "Logical debugging and systematic approach to challenges",
   },
 ];
 
-const SEEKING_OPPORTUNITIES = [
-  "Full-Time Developer Positions",
-  "Contract-Based Projects",
-  "Freelance MERN Opportunities",
-  "Remote Collaboration",
-  "Open Source Contributions",
+const WORK_VALUES = [
+  "Clear communication and collaborative mindset",
+  "Clean, documented, and maintainable code",
+  "Proactive learning and adapting to team standards",
+  "Ownership of features from concept to deployment",
+  "Remote-first work ethic with strong self-management",
 ];
 
 const About = () => {
   const heroRef = useRef(null);
   const statsRef = useRef(null);
-  const skillsRef = useRef(null);
+  const valueRef = useRef(null);
 
-  const isHeroInView = useInView(heroRef, { once: false, margin: "-100px" });
-  const isStatsInView = useInView(statsRef, { once: false, margin: "-100px" });
-  const isSkillsInView = useInView(skillsRef, {
-    once: false,
-    margin: "-100px",
-  });
+  // FIX: Set once: true to prevent flickering when scrolling up and down
+  const isHeroInView = useInView(heroRef, { once: true, margin: "-100px" });
+  const isStatsInView = useInView(statsRef, { once: true, margin: "-100px" });
+  const isValueInView = useInView(valueRef, { once: true, margin: "-100px" });
 
   return (
-    <main className="min-h-screen bg-base-100 pt-24 pb-16">
+    <main className="min-h-screen bg-base-100 section-spacing overflow-x-hidden">
       <div className="container-page">
-        {/* Hero Section */}
+        {/* ========== HERO SECTION ========== */}
         <motion.section
           ref={heroRef}
           initial={{ opacity: 0, y: 30 }}
           animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="mb-20"
+          className="mb-24"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left: Text Content */}
-            <div className="lg:col-span-7">
-              {/* Badge */}
-              <motion.div
-                className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-base-200/80 border border-base-content/10 backdrop-blur-sm mb-6 shadow-lg"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 0.6, delay: 0.2 }}
-              >
-                <FaLaptopCode className="text-primary text-sm" />
-                <span className="text-[10px] font-black tracking-[0.4em] uppercase text-primary">
-                  About Me
-                </span>
-              </motion.div>
+          {/* Location Badge */}
+          <motion.div
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-base-200/80 border border-base-content/10 mb-6"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ delay: 0.2 }}
+          >
+            <FaMapMarkerAlt className="text-primary text-xs" />
+            <span className="text-[10px] font-black tracking-[0.4em] uppercase text-base-content/60">
+              Chittagong, Bangladesh • Remote Ready
+            </span>
+          </motion.div>
 
-              {/* Title */}
-              <h1 className="text-4xl md:text-6xl font-black tracking-tighter leading-tight mb-6">
-                Full-Stack <span className="text-gradient">Developer</span>
-              </h1>
+          {/* Name & Title */}
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-tight mb-6">
+            Md. Toyob Uddin Hridoy
+          </h1>
 
-              {/* Tagline */}
-              <p className="text-xl md:text-2xl font-semibold text-base-content/70 mb-8 leading-relaxed">
-                Transforming ideas into scalable web applications with clean
-                code and modern technologies.
-              </p>
+          <p className="text-xl md:text-2xl font-bold text-primary mb-8">
+            Full-Stack Web Developer • MERN Stack Specialist
+          </p>
 
-              {/* Description */}
-              <div className="space-y-4 text-base-content/60 leading-relaxed">
-                <p>
-                  My name is <span className="text-primary font-semibold">
-                    Md. Toyob Uddin Hridoy.
-                  </span>{" "} I'm a{" "}
-                  <span className="text-primary font-semibold">
-                    BSc Computer Science & Engineering graduate
-                  </span>{" "}
-                  from Port City International University, specializing in the{" "}
-                  <span className="text-primary font-semibold">MERN stack</span>
-                  . With <strong>923+ commits</strong> and{" "}
-                  <strong>92+ repositories</strong>, I've built a solid
-                  foundation through consistent hands-on development.
+          {/* Quick Info Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div className="flex items-center gap-3 p-4 rounded-2xl bg-base-200/40 border border-base-content/5">
+              <FaGraduationCap className="text-2xl text-primary" />
+              <div>
+                <p className="font-bold text-sm">BSc in CSE</p>
+                <p className="text-xs text-base-content/60">
+                  Port City University
                 </p>
-
-                <p>
-                  My journey is defined by{" "}
-                  <span className="text-primary font-semibold">
-                    practical learning
-                  </span>{" "}
-                  — from building authentication systems with JWT to integrating
-                  payment gateways with Stripe. I focus on writing{" "}
-                  <strong>clean, maintainable code</strong> and creating{" "}
-                  <strong>user-centric applications</strong> that solve real
-                  problems.
-                </p>
-
-                <p>
-                  Currently seeking opportunities to contribute my skills to{" "}
-                  <span className="text-primary font-semibold">
-                    innovative teams
-                  </span>{" "}
-                  and continue growing as a developer.
-                </p>
-              </div>
-
-              {/* CTA Buttons */}
-              <div className="flex flex-wrap gap-4 mt-8">
-                <Link to="/projects" className="btn-cta group">
-                  <FaRocket className="text-lg" />
-                  View Projects
-                  <motion.div
-                    className="ml-1"
-                    animate={{ x: [0, 3, 0] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                  >
-                    →
-                  </motion.div>
-                </Link>
-
-                <a
-                  href="https://github.com/Hridoykhan4"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-cta-soft group"
-                >
-                  <FaGithub className="text-lg" />
-                  GitHub Profile
-                  <FaExternalLinkAlt className="text-sm transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-                </a>
               </div>
             </div>
-
-            {/* Right: Education Card */}
-            <motion.div
-              className="lg:col-span-5"
-              initial={{ opacity: 0, x: 30 }}
-              animate={isHeroInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.3 }}
-            >
-              <div className="relative group rounded-3xl overflow-hidden bg-base-200/50 border border-base-content/5 backdrop-blur-sm p-8">
-                {/* Hover Gradient */}
-                <motion.div className="absolute inset-0 bg-linear-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                <div className="relative">
-                  {/* Icon */}
-                  <motion.div
-                    className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-6"
-                    whileHover={{ rotate: 360, scale: 1.1 }}
-                    transition={{ duration: 0.6 }}
-                  >
-                    <FaGraduationCap className="text-3xl text-primary" />
-                  </motion.div>
-
-                  {/* Content */}
-                  <div className="mb-6">
-                    <span className="text-xs font-bold uppercase tracking-wider text-primary mb-2 block">
-                      2022 — 2024
-                    </span>
-                    <h3 className="text-xl font-black mb-2">
-                      BSc in Computer Science & Engineering
-                    </h3>
-                    <p className="text-sm text-base-content/60 mb-4">
-                      Port City International University
-                    </p>
-                    <p className="text-sm text-base-content/50">
-                      Focused on Software Engineering, Data Structures, Database
-                      Systems, and Web Technologies.
-                    </p>
-                  </div>
-
-                  {/* Meta */}
-                  <div className="flex flex-wrap gap-2">
-                    <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">
-                      CSE Graduate
-                    </span>
-                    <span className="px-3 py-1 rounded-full bg-base-300/50 text-base-content/70 text-xs font-semibold">
-                      Chittagong
-                    </span>
-                  </div>
-                </div>
+            <div className="flex items-center gap-3 p-4 rounded-2xl bg-base-200/40 border border-base-content/5">
+              <FaCode className="text-2xl text-primary" />
+              <div>
+                <p className="font-bold text-sm">923+ Commits</p>
+                <p className="text-xs text-base-content/60">
+                  Proven track record
+                </p>
               </div>
-            </motion.div>
+            </div>
+            <div className="flex items-center gap-3 p-4 rounded-2xl bg-base-200/40 border border-base-content/5">
+              <FaRocket className="text-2xl text-primary" />
+              <div>
+                <p className="font-bold text-sm">Remote/Office</p>
+                <p className="text-xs text-base-content/60">
+                  Flexible & available
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Social Links */}
+          <div className="flex flex-wrap gap-3">
+            <a
+              href="https://github.com/Hridoykhan4"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-base-200/60 border border-base-content/10 hover:border-primary hover:bg-base-200 transition-all text-sm font-semibold group"
+            >
+              <FaGithub />
+              <span>GitHub</span>
+              <FaExternalLinkAlt className="text-xs opacity-0 group-hover:opacity-100 transition-opacity" />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/md-toyob-uddin-hridoy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-base-200/60 border border-base-content/10 hover:border-primary hover:bg-base-200 transition-all text-sm font-semibold group"
+            >
+              <FaLinkedinIn />
+              <span>LinkedIn</span>
+              <FaExternalLinkAlt className="text-xs opacity-0 group-hover:opacity-100 transition-opacity" />
+            </a>
           </div>
         </motion.section>
 
-        {/* GitHub Stats */}
+        {/* ========== PROFESSIONAL OVERVIEW ========== */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-24">
+          {/* Left: Story */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={isHeroInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-black mb-6">
+              Who I <span className="text-linear">Am</span>
+            </h2>
+
+            <div className="space-y-5 text-base-content/70 leading-relaxed">
+              <p>
+                I'm a <strong>Computer Science graduate</strong> with a BSc from
+                Port City International University, specializing in building{" "}
+                <strong>production-ready web applications</strong> using the
+                MERN stack.
+              </p>
+
+              <p>
+                What started as curiosity about how websites work evolved into{" "}
+                <strong>systematic skill development</strong>. Over the past
+                year, I've maintained <strong>consistent daily practice</strong>{" "}
+                — reflected in my <strong>923+ commits</strong> and{" "}
+                <strong>92+ repositories</strong> on GitHub.
+              </p>
+
+              <p>
+                I focus on writing <strong>clean, maintainable code</strong>{" "}
+                that solves real business problems. From implementing JWT
+                authentication to integrating Stripe payments, I've built
+                features that deliver value and scale with growth.
+              </p>
+
+              <p>
+                I'm seeking opportunities where I can contribute to{" "}
+                <strong>meaningful products</strong>, collaborate with
+                experienced engineers, and continue growing as a professional
+                developer.
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Right: Academic Excellence + GitHub Proof */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={isHeroInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="space-y-6"
+          >
+            {/* Education Card */}
+            <div className="p-8 rounded-3xl bg-base-200/50 border border-base-content/5 relative group">
+              <motion.div className="absolute inset-0 bg-linear-to-br from-primary/5 to-accent/5 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="relative">
+                <div className="flex items-start gap-4 mb-4">
+                  <motion.div
+                    className="p-3 rounded-xl bg-primary/10"
+                    whileHover={{ rotate: 360, scale: 1.1 }}
+                    transition={{ duration: 0.6 }}
+                  >
+                    <FaGraduationCap className="text-2xl text-primary" />
+                  </motion.div>
+                  <div>
+                    <p className="text-xs font-black uppercase tracking-wider text-primary mb-2">
+                      2022 — 2024
+                    </p>
+                    <h3 className="text-xl font-black mb-1">
+                      BSc in Computer Science & Engineering
+                    </h3>
+                    <p className="text-sm text-base-content/60">
+                      Port City International University
+                    </p>
+                  </div>
+                </div>
+                <p className="text-sm text-base-content/70 leading-relaxed">
+                  Strong foundation in <strong>Data Structures</strong>,{" "}
+                  <strong>Algorithms</strong>, <strong>Database Systems</strong>
+                  , and <strong>Software Engineering</strong> — essential
+                  knowledge for building scalable applications.
+                </p>
+              </div>
+            </div>
+
+            {/* GitHub Stats */}
+            <div className="grid grid-cols-3 gap-3">
+              {GITHUB_STATS.map((stat, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ delay: 0.5 + idx * 0.1 }}
+                  whileHover={{ y: -3, scale: 1.02 }}
+                  className="p-4 rounded-2xl bg-base-200/40 border border-base-content/5 text-center"
+                >
+                  <stat.icon className="text-xl text-primary mx-auto mb-2" />
+                  <div className="text-2xl font-black text-primary mb-1">
+                    {stat.value}
+                  </div>
+                  <div className="text-[9px] uppercase tracking-wider text-base-content/50 font-bold">
+                    {stat.label}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Tech Stack */}
+            <div className="p-6 rounded-2xl bg-base-200/40 border border-base-content/5">
+              <p className="text-xs font-black uppercase tracking-wider text-base-content/50 mb-4">
+                Core Technologies
+              </p>
+              <div className="grid grid-cols-3 gap-3">
+                {TECH_STACK.map((tech, idx) => (
+                  <motion.div
+                    key={idx}
+                    whileHover={{ y: -2, scale: 1.05 }}
+                    className="flex flex-col items-center gap-2 p-3 rounded-xl bg-base-300/30 hover:bg-base-300/50 transition-colors"
+                  >
+                    <tech.icon className="text-xl text-primary" />
+                    <span className="text-[10px] font-semibold text-center">
+                      {tech.name}
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* ========== BUSINESS VALUE SECTION ========== */}
         <motion.section
-          ref={statsRef}
-          className="mb-20"
+          ref={valueRef}
           initial={{ opacity: 0, y: 30 }}
-          animate={isStatsInView ? { opacity: 1, y: 0 } : {}}
+          animate={isValueInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
+          className="mb-24"
         >
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {GITHUB_STATS.map((stat, idx) => (
+          <h2 className="text-3xl md:text-4xl font-black mb-4">
+            What I <span className="text-linear">Deliver</span>
+          </h2>
+          <p className="text-base-content/60 mb-12 max-w-2xl">
+            Real business value through technical solutions
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {BUSINESS_VALUE.map((item, idx) => (
               <motion.div
                 key={idx}
                 initial={{ opacity: 0, y: 20 }}
-                animate={isStatsInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: idx * 0.1 }}
-                whileHover={{ y: -5, scale: 1.02 }}
-                className="group relative rounded-3xl overflow-hidden bg-base-200/30 border border-base-content/5 backdrop-blur-sm p-8 text-center"
+                animate={isValueInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: idx * 0.1 }}
+                whileHover={{ y: -3, scale: 1.01 }}
+                className="p-6 rounded-2xl bg-base-200/40 border border-base-content/5"
               >
-                <motion.div className="absolute inset-0 bg-linear-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                <div className="relative">
-                  <motion.div
-                    whileHover={{ rotate: 360, scale: 1.2 }}
-                    transition={{ duration: 0.6 }}
-                  >
-                    <stat.icon className="text-3xl text-primary mx-auto mb-4" />
-                  </motion.div>
-
-                  <div className="text-4xl md:text-5xl font-black tracking-tighter mb-2 text-primary">
-                    {stat.value}
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-xl bg-primary/10">
+                    <item.icon className="text-xl text-primary" />
                   </div>
-
-                  <p className="text-xs font-bold uppercase tracking-wider text-base-content/50">
-                    {stat.label}
-                  </p>
+                  <div>
+                    <h3 className="font-bold mb-2">{item.title}</h3>
+                    <p className="text-sm text-base-content/70">
+                      {item.detail}
+                    </p>
+                  </div>
                 </div>
               </motion.div>
             ))}
           </div>
         </motion.section>
 
-        {/* Skills & Values Grid */}
-        <motion.section ref={skillsRef} className="mb-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Left: Tech Proficiency */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={isSkillsInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.8 }}
-            >
-              <h2 className="text-2xl md:text-3xl font-black mb-8">
-                Tech <span className="text-gradient">Proficiency</span>
-              </h2>
-
-              <div className="space-y-6">
-                {TECH_PROFICIENCY.map((tech, idx) => (
-                  <motion.div
-                    key={tech.name}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={isSkillsInView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ delay: idx * 0.1 }}
-                    className="group"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-3">
-                        <tech.icon
-                          className="text-xl"
-                          style={{ color: tech.color }}
-                        />
-                        <span className="font-bold text-base-content">
-                          {tech.name}
-                        </span>
-                      </div>
-                      <span className="text-sm font-semibold text-primary">
-                        {tech.level}%
-                      </span>
-                    </div>
-
-                    <div className="relative h-2 bg-base-300 rounded-full overflow-hidden">
-                      <motion.div
-                        className="absolute inset-y-0 left-0 bg-linear-to-r from-primary to-accent rounded-full"
-                        initial={{ width: 0 }}
-                        animate={
-                          isSkillsInView ? { width: `${tech.level}%` } : {}
-                        }
-                        transition={{ duration: 1, delay: idx * 0.1 }}
-                      />
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Right: Core Values */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={isSkillsInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.8 }}
-            >
-              <h2 className="text-2xl md:text-3xl font-black mb-8">
-                Core <span className="text-gradient">Values</span>
-              </h2>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {CORE_VALUES.map((value, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={isSkillsInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ delay: idx * 0.1 }}
-                    whileHover={{ y: -3, scale: 1.02 }}
-                    className="group p-6 rounded-2xl bg-base-200/30 border border-base-content/5"
-                  >
-                    <value.icon className="text-2xl text-primary mb-3" />
-                    <h3 className="font-bold mb-2 group-hover:text-primary transition-colors">
-                      {value.title}
-                    </h3>
-                    <p className="text-sm text-base-content/60 leading-relaxed">
-                      {value.description}
-                    </p>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </motion.section>
-
-        {/* Seeking Opportunities Banner */}
+        {/* ========== TEAM FIT SECTION ========== */}
         <motion.section
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: "-100px" }}
+          viewport={{ once: true, margin: "-100px" }} // FIX: once: true
           transition={{ duration: 0.8 }}
-          className="relative rounded-3xl overflow-hidden bg-linear-to-br from-base-200 to-base-300 border border-primary/20 p-8 md:p-12"
+          className="mb-24"
+        >
+          <h2 className="text-3xl md:text-4xl font-black mb-4">
+            How I <span className="text-linear">Work</span>
+          </h2>
+          <p className="text-base-content/60 mb-10 max-w-2xl">
+            Professional mindset built for collaborative teams
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {WORK_VALUES.map((value, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, x: -10 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.05 }}
+                className="flex items-start gap-3 p-5 rounded-2xl bg-base-200/30 border border-base-content/5"
+              >
+                <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0" />
+                <p className="text-sm font-medium text-base-content/80">
+                  {value}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.section>
+
+        {/* ========== CTA SECTION ========== */}
+        <motion.section
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }} 
+          transition={{ duration: 0.8 , delay: 0.5}}
+          className="relative rounded-3xl overflow-hidden bg-linear-to-br from-base-200 to-base-300 border border-primary/20 p-10 md:p-16 text-center"
         >
           <div className="relative z-10">
-            <h2 className="text-2xl md:text-4xl font-black mb-6">
-              Ready to <span className="text-gradient">Build Together</span>?
+            <h2 className="text-3xl md:text-5xl font-black mb-6">
+              Let's Build <span className="text-linear">Together</span>
             </h2>
 
-            <p className="text-base-content/70 mb-8 max-w-2xl leading-relaxed">
-              I'm actively seeking opportunities to contribute my skills and
-              passion to innovative teams. Whether it's building MVPs, scaling
-              applications, or collaborating on meaningful projects — let's
-              connect!
+            <p className="text-base-content/70 mb-8 max-w-2xl mx-auto leading-relaxed">
+              I'm actively seeking <strong>full-time positions</strong> or{" "}
+              <strong>remote opportunities</strong> where I can contribute to
+              meaningful products, work with experienced teams, and deliver real
+              impact.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8">
-              {SEEKING_OPPORTUNITIES.map((item, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, x: -10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.05 }}
-                  className="flex items-center gap-2 text-sm"
-                >
-                  <FaCheckCircle className="text-primary shrink-0" />
-                  <span className="font-semibold">{item}</span>
-                </motion.div>
-              ))}
+            <div className="flex flex-wrap gap-4 justify-center">
+              <Link to="/contact" className="btn-cta">
+                <FaRocket />
+                Get In Touch
+              </Link>
+              <Link to="/projects" className="btn-cta-soft">
+                <FaLayerGroup />
+                View Projects
+              </Link>
             </div>
-
-            <Link to="/contact" className="btn-cta inline-flex">
-              <FaRocket className="text-lg" />
-              Let's Connect
-            </Link>
           </div>
+
+          {/* Background Elements */}
+          <div className="absolute top-0 right-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl -mr-36 -mt-36" />
+          <div className="absolute bottom-0 left-0 w-72 h-72 bg-accent/5 rounded-full blur-3xl -ml-36 -mb-36" />
         </motion.section>
       </div>
     </main>
