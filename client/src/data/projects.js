@@ -1,6 +1,7 @@
 // src/data/projects.js
 import masakkaliCover from "../assets/Projects/project1.png";
-
+import cafeAzizCover from "../assets/Projects/project2Cafe.png";
+import happinessHillCover from '../assets/Projects/project3Happiness.png'
 export const PROJECTS_DATA = [
   {
     id: "masakkali-courier",
@@ -91,7 +92,7 @@ export const PROJECTS_DATA = [
     category: "Full Stack",
     featured: true,
     completionDate: "2024-12",
-    duration: "3 months",
+    duration: "1 months",
 
     // Display Priority
     order: 1,
@@ -106,8 +107,8 @@ export const PROJECTS_DATA = [
     fullDescription:
       "A comprehensive restaurant management system built with MERN stack featuring online food ordering, dynamic menu management, table reservation system, and order tracking. Includes Firebase authentication, responsive design, and real-time updates for seamless dining experience.",
 
-    cover: "/projects/cafe-aziz.jpg", // Add your image
-    gallery: [],
+    cover: cafeAzizCover, 
+    gallery: [cafeAzizCover],
 
     stack: {
       frontend: ["React", "Tailwind CSS", "DaisyUI"],
@@ -173,8 +174,8 @@ export const PROJECTS_DATA = [
     fullDescription:
       "A sophisticated hotel booking platform featuring JWT-based authentication, room browsing, booking system with date selection, and user dashboard for managing reservations. Built with MERN stack for robust performance and security.",
 
-    cover: "/projects/happiness-hill.jpg", // Add your image
-    gallery: [],
+    cover: happinessHillCover, 
+    gallery: [happinessHillCover],
 
     stack: {
       frontend: ["React", "Tailwind CSS"],
@@ -274,7 +275,7 @@ export const PROJECTS_DATA = [
     },
 
     tags: ["React", "Node.js", "MongoDB", "JWT", "Tailwind"],
-    category: "Full Stack",
+    category: "Front End",
     featured: false,
     completionDate: "2024-08",
     order: 4,

@@ -1,137 +1,172 @@
-import {
-  useInView,
-  useMotionValue,
-  useTransform,
-  motion,
-  AnimatePresence,
-} from "motion/react";
-import { useRef, useState } from "react";
+import { motion, useMotionValue, useTransform } from "motion/react";
+import { useState, useRef } from "react";
 import { Link } from "react-router";
-import { FaArrowRight, FaCode, FaLayerGroup } from "react-icons/fa";
+import { FaArrowRight, FaExternalLinkAlt, FaGithub } from "react-icons/fa";
 
 const ProjectCard = ({ project, index }) => {
   const cardRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
 
-  // 3D Tilt Logic
+  // 3D tilt effect
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const mouseXSpring = useTransform(x, [-0.5, 0.5], ["-7deg", "7deg"]);
-  const mouseYSpring = useTransform(y, [-0.5, 0.5], ["7deg", "-7deg"]);
+  const rotateX = useTransform(y, [-0.5, 0.5], ["5deg", "-5deg"]);
+  const rotateY = useTransform(x, [-0.5, 0.5], ["-5deg", "5deg"]);
 
   const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
     const width = rect.width;
     const height = rect.height;
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
-    x.set(mouseX / width - 0.5);
-    y.set(mouseY / height - 0.5);
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    x.set(0);
+    y.set(0);
   };
 
   return (
-    <motion.div
+    <motion.article
       ref={cardRef}
-      initial={{ opacity: 0, y: 50 }}
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.7, delay: index * 0.1, ease: "circOut" }}
-      className={`relative h-full ${project.gridSpan || ""}`}
+      transition={{ duration: 0.6, delay: index * 0.1 }}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+      }}
+      className="group h-full"
     >
-      <Link to={`/projects/${project.id}`} className="block h-full group">
-        <motion.div
-          onMouseMove={handleMouseMove}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => {
-            setIsHovered(false);
-            x.set(0);
-            y.set(0);
-          }}
-          style={{
-            rotateX: mouseYSpring,
-            rotateY: mouseXSpring,
-            transformStyle: "preserve-3d",
-          }}
-          className="relative h-full flex flex-col rounded-[2rem] bg-base-200/40 border border-base-content/5 hover:border-primary/30 backdrop-blur-md overflow-hidden transition-colors duration-500"
+      <div className="relative h-full flex flex-col rounded-3xl bg-base-200/50 border border-base-content/5 hover:border-primary/20 backdrop-blur-sm overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10">
+        {/* Image Section */}
+        <Link
+          to={`/projects/${project.id}`}
+          className="relative aspect-16/10 overflow-hidden bg-base-300 block"
+          style={{ transform: "translateZ(20px)" }}
         >
-          {/* Top Visual: Image + Floating Tags */}
-          <div
-            className="relative h-64 overflow-hidden"
-            style={{ transform: "translateZ(30px)" }}
-          >
-            <motion.img
-              src={project.cover}
-              alt={project.title}
-              animate={{ scale: isHovered ? 1.1 : 1 }}
-              transition={{ duration: 0.8 }}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-base-200/90 via-transparent to-transparent" />
+          <motion.img
+            src={project.cover}
+            alt={project.title}
+            className="w-full h-full object-cover"
+            animate={{ scale: isHovered ? 1.08 : 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          />
 
-            {/* Floating Tech Badges */}
-            <div className="absolute bottom-4 left-6 flex flex-wrap gap-2">
-              {project.tags.slice(0, 2).map((tag) => (
-                <span
-                  key={tag}
-                  className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full"
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-linear-to-t from-base-200 via-base-200/50 to-transparent" />
+
+          {/* Hover Overlay with CTA */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isHovered ? 1 : 0 }}
+            className="absolute inset-0 bg-base-100/95 backdrop-blur-sm flex items-center justify-center"
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{
+                scale: isHovered ? 1 : 0.8,
+                opacity: isHovered ? 1 : 0,
+              }}
+              transition={{ delay: 0.1 }}
+              className="flex flex-col items-center gap-4"
+            >
+              <div className="flex gap-3">
+                <a
+                  href={project.links.live}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="p-3 rounded-xl bg-primary text-primary-content hover:scale-110 transition-transform"
+                  aria-label="View live demo"
                 >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Body Content */}
-          <div
-            className="p-8 flex-1 flex flex-col justify-between"
-            style={{ transform: "translateZ(50px)" }}
-          >
-            <div>
-              <div className="flex items-center gap-2 mb-4 text-primary font-bold text-xs tracking-widest uppercase">
-                <FaLayerGroup className="text-[10px]" />
-                {project.category}
+                  <FaExternalLinkAlt size={18} />
+                </a>
+                {project.links.github.client && (
+                  <a
+                    href={project.links.github.client}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="p-3 rounded-xl bg-base-content text-base-100 hover:scale-110 transition-transform"
+                    aria-label="View source code"
+                  >
+                    <FaGithub size={18} />
+                  </a>
+                )}
               </div>
+              <span className="text-sm font-bold uppercase tracking-wider text-primary">
+                Quick Links
+              </span>
+            </motion.div>
+          </motion.div>
 
-              <h3 className="text-2xl md:text-3xl font-black tracking-tighter mb-3 group-hover:text-primary transition-colors">
-                {project.title}
-              </h3>
-
-              <p className="text-sm text-base-content/60 leading-relaxed line-clamp-2">
-                {project.shortDescription}
-              </p>
-            </div>
-
-            {/* Bottom Section */}
-            <div className="mt-8 flex items-center justify-between border-t border-base-content/5 pt-6">
-              <div className="flex items-center gap-4">
-                <span className="flex items-center gap-2 text-[10px] font-bold opacity-40 uppercase tracking-tighter">
-                  <FaCode /> MERN Stack
-                </span>
-              </div>
-
-              <motion.div
-                animate={{ x: isHovered ? 5 : 0 }}
-                className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-primary"
+          {/* Tech Tags - Always Visible */}
+          <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2">
+            {project.tags.slice(0, 3).map((tag) => (
+              <span
+                key={tag}
+                className="px-3 py-1.5 text-xs font-bold uppercase tracking-wide bg-base-100/90 backdrop-blur-md border border-base-content/10 rounded-lg"
               >
-                Case Study <FaArrowRight />
-              </motion.div>
-            </div>
+                {tag}
+              </span>
+            ))}
+          </div>
+        </Link>
+
+        {/* Content Section */}
+        <div
+          className="flex-1 flex flex-col p-6 md:p-8"
+          style={{ transform: "translateZ(30px)" }}
+        >
+          {/* Category Badge */}
+          <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-primary/70 mb-3">
+            <span className="w-2 h-2 rounded-full bg-primary" />
+            {project.category}
           </div>
 
-          {/* Hover Glow Effect */}
-          <AnimatePresence>
-            {isHovered && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute inset-0 pointer-events-none bg-gradient-to-br from-primary/5 via-transparent to-accent/5"
-              />
-            )}
-          </AnimatePresence>
-        </motion.div>
-      </Link>
-    </motion.div>
+          {/* Title */}
+          <Link to={`/projects/${project.id}`}>
+            <h3 className="text-xl md:text-2xl lg:text-3xl font-black tracking-tight mb-3 group-hover:text-primary transition-colors">
+              {project.title}
+            </h3>
+          </Link>
+
+          {/* Description */}
+          <p className="text-sm md:text-base text-base-content/60 leading-relaxed mb-6 line-clamp-2 grow">
+            {project.shortDescription}
+          </p>
+
+          {/* Bottom Action */}
+          <Link
+            to={`/projects/${project.id}`}
+            className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-base-content/70 hover:text-primary transition-colors group/link"
+          >
+            View Case Study
+            <FaArrowRight className="transition-transform group-hover/link:translate-x-1" />
+          </Link>
+        </div>
+
+        {/* Hover Glow Effect */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isHovered ? 1 : 0 }}
+          className="absolute inset-0 pointer-events-none bg-linear-to-br from-primary/5 via-transparent to-accent/5"
+          style={{ transform: "translateZ(10px)" }}
+        />
+      </div>
+    </motion.article>
   );
 };
 
