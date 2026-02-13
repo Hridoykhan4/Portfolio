@@ -4,12 +4,13 @@ import {
   useMotionValue,
   useTransform,
 } from "motion/react";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useCallback, useMemo } from "react";
 import { Link, NavLink, useLocation } from "react-router";
 import ThemeContext from "../../../contexts/ThemeContext";
 import { FiMoon, FiSun } from "react-icons/fi";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
 
+// Moved outside to prevent re-creation on every render
 const NAV_ITEMS = [
   { label: "Home", link: "/" },
   { label: "About", link: "/about" },
@@ -70,38 +71,53 @@ const Navbar = () => {
   const rotateX = useTransform(mouseY, [-300, 300], [3, -3]);
   const rotateY = useTransform(mouseX, [-300, 300], [-3, 3]);
 
-  const isContactPage = location.pathname === "/contact";
+  const isContactPage = useMemo(
+    () => location.pathname === "/contact",
+    [location.pathname],
+  );
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 20);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsOpen(false);
-  }, [location]);
+  }, [location.pathname]);
 
-  const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    mouseX.set(e.clientX - centerX);
-    mouseY.set(e.clientY - centerY);
-  };
+  const handleMouseMove = useCallback(
+    (e) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      mouseX.set(e.clientX - centerX);
+      mouseY.set(e.clientY - centerY);
+    },
+    [mouseX, mouseY],
+  );
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     mouseX.set(0);
     mouseY.set(0);
-  };
+  }, [mouseX, mouseY]);
 
-  const navLinkClass = ({ isActive }) =>
-    `relative px-4 py-2 text-xs font-bold uppercase tracking-[0.15em] transition-all duration-300 ${
-      isActive ? "text-primary" : "text-base-content/60 hover:text-primary"
-    }`;
+  const navLinkClass = useCallback(
+    ({ isActive }) =>
+      `relative px-4 py-2 text-xs font-bold uppercase tracking-[0.15em] transition-all duration-300 ${
+        isActive ? "text-primary" : "text-base-content/60 hover:text-primary"
+      }`,
+    [],
+  );
 
   return (
     <Motion.nav
@@ -109,9 +125,8 @@ const Navbar = () => {
       initial="hidden"
       animate="visible"
       className="sticky top-0 z-100 w-full"
-      style={{ perspective: 1200 }}
+      style={{ perspective: 1200, transformZ: 0, willChange: "transform" }}
     >
-      {/* Backdrop blur layer for sticky effect */}
       <div className="absolute inset-0 bg-base-100/80 backdrop-blur-xl -z-10" />
 
       <div className="container-page py-3">
@@ -122,6 +137,7 @@ const Navbar = () => {
             rotateX,
             rotateY,
             transformStyle: "preserve-3d",
+            willChange: "transform",
           }}
           className={`
             relative rounded-3xl border backdrop-blur-2xl 
@@ -133,13 +149,11 @@ const Navbar = () => {
             }
           `}
         >
-          {/* 3D Inner Glow */}
           <div
             className="absolute inset-0 rounded-3xl bg-linear-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none"
             style={{ transform: "translateZ(1px)" }}
           />
 
-          {/* Animated Border linear (on hover) */}
           <div
             className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none overflow-hidden"
             style={{ transform: "translateZ(2px)" }}
@@ -157,7 +171,6 @@ const Navbar = () => {
             className="navbar min-h-16 p-0 relative group"
             style={{ transform: "translateZ(10px)" }}
           >
-            {/* Logo Section */}
             <Motion.div className="flex-1" variants={itemMotion}>
               <Link to="/" className="flex items-center gap-3 group/logo">
                 <Motion.div
@@ -171,7 +184,8 @@ const Navbar = () => {
                 >
                   <img
                     src="/logo.svg"
-                    alt="Hridoy Portfolio Logo"
+                    alt="Logo"
+                    fetchPriority="high"
                     className="w-8 h-8 md:w-9 md:h-9 drop-shadow-2xl"
                     style={{ transform: "translateZ(20px)" }}
                   />
@@ -218,7 +232,6 @@ const Navbar = () => {
               </Link>
             </Motion.div>
 
-            {/* Desktop Navigation */}
             <Motion.ul
               className="hidden lg:flex items-center gap-1"
               variants={itemMotion}
@@ -264,7 +277,6 @@ const Navbar = () => {
                           />
                         )}
 
-                        {/* 3D Hover Background */}
                         <Motion.span
                           className="absolute inset-0 bg-primary/10 rounded-xl -z-10"
                           initial={{ opacity: 0, scale: 0.8 }}
@@ -282,12 +294,10 @@ const Navbar = () => {
               ))}
             </Motion.ul>
 
-            {/* Action Group */}
             <Motion.div
               className="flex items-center gap-1 md:gap-3 ml-4"
               variants={itemMotion}
             >
-              {/* Theme Toggle */}
               <Motion.button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -327,7 +337,6 @@ const Navbar = () => {
                 </AnimatePresence>
               </Motion.button>
 
-              {/* Contact CTA - Only show if NOT on contact page */}
               {!isContactPage && (
                 <Motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -367,7 +376,6 @@ const Navbar = () => {
                 </Motion.div>
               )}
 
-              {/* Mobile Menu Toggle */}
               <Motion.button
                 className="lg:hidden btn btn-ghost btn-circle text-2xl"
                 onClick={() => setIsOpen(!isOpen)}
@@ -392,7 +400,6 @@ const Navbar = () => {
           </div>
         </Motion.div>
 
-        {/* Mobile Menu */}
         <AnimatePresence>
           {isOpen && (
             <Motion.div
@@ -461,7 +468,6 @@ const Navbar = () => {
                   </Motion.li>
                 ))}
 
-                {/* Mobile Contact CTA - Only show if NOT on contact page */}
                 {!isContactPage && (
                   <Motion.div
                     variants={itemMotion}

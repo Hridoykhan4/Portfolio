@@ -1,14 +1,13 @@
-import { Outlet, useLocation, useNavigation } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import { useEffect } from "react";
 import Navbar from "../pages/shared/Navbar/Navbar";
 import Footer from "../pages/shared/Footer/Footer";
 import SmoothScroll from "../components/SmoothScroll";
-import LoadingSpinner from "../components/LoadingSpinner";
 import SmoothCursor from "../components/SmoothCursor";
 
 const MainLayout = () => {
   const { pathname } = useLocation();
-  const navigation = useNavigation();
+ 
 
   useEffect(() => {
     const scrollToTop = () => {
@@ -31,11 +30,9 @@ const MainLayout = () => {
         <Navbar />
 
         <main id="main-content" className="grow w-full overflow-x-hidden">
-          {navigation.state === "loading" ? (
-            <LoadingSpinner fullScreen />
-          ) : (
+        
             <Outlet />
-          )}
+ 
         </main>
 
         <Footer />
