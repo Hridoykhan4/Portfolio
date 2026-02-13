@@ -1,7 +1,6 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable no-unused-vars */
-import { motion, useInView } from "motion/react";
-import { useRef } from "react";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "motion/react";
+import { useState } from "react";
 import {
   SiReact,
   SiJavascript,
@@ -15,420 +14,436 @@ import {
   SiVite,
   SiNextdotjs,
   SiTypescript,
-  SiHtml5,
-  SiCss3,
-  SiBootstrap,
-  SiGit,
-  SiGithub,
-  SiVercel,
-  SiNetlify,
-  SiFramer,
 } from "react-icons/si";
 import {
-  FaCode,
+  FaBootstrap,
   FaServer,
-  FaTools,
   FaShieldAlt,
-  FaLayerGroup,
   FaRocket,
+  FaCode,
+  FaLayerGroup,
 } from "react-icons/fa";
 
-/* ========== PROFESSIONAL SKILL ORGANIZATION ========== */
-const SKILL_CATEGORIES = [
-  {
-    id: "frontend",
-    title: "Frontend Development",
-    icon: FaCode,
-    description: "Responsive, accessible, and performant user interfaces",
+
+const SKILL_DATA = {
+  expertise: {
+    title: "Production Expertise",
+    subtitle: "Battle-tested in real projects",
     skills: [
-      { name: "React.js", icon: SiReact, proficiency: 5, color: "#61DAFB" },
+      { name: "React 19", icon: SiReact, color: "#61DAFB", level: "Expert" },
       {
-        name: "JavaScript (ES6+)",
+        name: "JavaScript ES6+",
         icon: SiJavascript,
-        proficiency: 5,
         color: "#F7DF1E",
+        level: "Expert",
       },
-      { name: "HTML5", icon: SiHtml5, proficiency: 5, color: "#E34F26" },
-      { name: "CSS3", icon: SiCss3, proficiency: 5, color: "#1572B6" },
       {
-        name: "Tailwind CSS",
+        name: "Tailwind CSS 4",
         icon: SiTailwindcss,
-        proficiency: 5,
         color: "#06B6D4",
+        level: "Expert",
       },
       {
-        name: "Bootstrap",
-        icon: SiBootstrap,
-        proficiency: 4,
-        color: "#7952B3",
+        name: "Node.js/Express",
+        icon: SiNodedotjs,
+        color: "#339933",
+        level: "Advanced",
+      },
+      { name: "MongoDB", icon: SiMongodb, color: "#47A248", level: "Advanced" },
+      {
+        name: "Firebase",
+        icon: SiFirebase,
+        color: "#FFCA28",
+        level: "Advanced",
+      },
+    ],
+  },
+  tools: {
+    title: "Professional Tools",
+    subtitle: "Modern development workflow",
+    skills: [
+      {
+        name: "React Router v7",
+        icon: FaLayerGroup,
+        color: "#CA4245",
+        level: "Advanced",
+      },
+      {
+        name: "TanStack Query",
+        icon: FaRocket,
+        color: "#FF4154",
+        level: "Advanced",
       },
       {
         name: "Framer Motion",
-        icon: SiFramer,
-        proficiency: 4,
+        icon: FaCode,
         color: "#FF0055",
+        level: "Advanced",
+      },
+      {
+        name: "DaisyUI 5",
+        icon: FaLayerGroup,
+        color: "#FF9903",
+        level: "Expert",
+      },
+      {
+        name: "Bootstrap 5",
+        icon: FaBootstrap,
+        color: "#7952B3",
+        level: "Advanced",
+      },
+      { name: "Vite", icon: SiVite, color: "#646CFF", level: "Advanced" },
+    ],
+  },
+  backend: {
+    title: "Backend & Integration",
+    subtitle: "Secure, scalable systems",
+    skills: [
+      {
+        name: "Express.js",
+        icon: SiExpress,
+        color: "#ffffff",
+        level: "Advanced",
+      },
+      {
+        name: "JWT Auth",
+        icon: FaShieldAlt,
+        color: "#10b981",
+        level: "Advanced",
+      },
+      {
+        name: "Stripe Payments",
+        icon: SiStripe,
+        color: "#635BFF",
+        level: "Intermediate",
+      },
+      {
+        name: "REST APIs",
+        icon: FaServer,
+        color: "#3b82f6",
+        level: "Advanced",
+      },
+      { name: "Postman", icon: SiPostman, color: "#FF6C37", level: "Advanced" },
+    ],
+  },
+  learning: {
+    title: "Active Learning",
+    subtitle: "Expanding capabilities",
+    skills: [
+      {
+        name: "Next.js 15",
+        icon: SiNextdotjs,
+        color: "#ffffff",
+        level: "Learning",
       },
       {
         name: "TypeScript",
         icon: SiTypescript,
-        proficiency: 3,
         color: "#3178C6",
-      },
-      { name: "Next.js", icon: SiNextdotjs, proficiency: 3, color: "#ffffff" },
-    ],
-  },
-  {
-    id: "backend",
-    title: "Backend & APIs",
-    icon: FaServer,
-    description: "Secure, scalable server-side architectures",
-    skills: [
-      { name: "Node.js", icon: SiNodedotjs, proficiency: 4, color: "#339933" },
-      { name: "Express.js", icon: SiExpress, proficiency: 4, color: "#ffffff" },
-      { name: "MongoDB", icon: SiMongodb, proficiency: 4, color: "#47A248" },
-      { name: "Firebase", icon: SiFirebase, proficiency: 4, color: "#FFCA28" },
-      { name: "REST APIs", icon: FaServer, proficiency: 4, color: "#10b981" },
-      {
-        name: "JWT Authentication",
-        icon: FaShieldAlt,
-        proficiency: 4,
-        color: "#3b82f6",
-      },
-      {
-        name: "Stripe Integration",
-        icon: SiStripe,
-        proficiency: 3,
-        color: "#635BFF",
+        level: "Learning",
       },
     ],
-  },
-  {
-    id: "tools",
-    title: "Development Tools",
-    icon: FaTools,
-    description: "Modern workflow and deployment platforms",
-    skills: [
-      { name: "Git", icon: SiGit, proficiency: 5, color: "#F05032" },
-      { name: "GitHub", icon: SiGithub, proficiency: 5, color: "#ffffff" },
-      { name: "Vite", icon: SiVite, proficiency: 4, color: "#646CFF" },
-      { name: "Postman", icon: SiPostman, proficiency: 4, color: "#FF6C37" },
-      { name: "Vercel", icon: SiVercel, proficiency: 4, color: "#ffffff" },
-      { name: "Netlify", icon: SiNetlify, proficiency: 4, color: "#00C7B7" },
-    ],
-  },
-];
-
-const PROFICIENCY_LABELS = {
-  5: {
-    label: "Expert",
-    description: "Production-ready",
-    color: "text-green-500",
-    bgColor: "bg-green-500",
-  },
-  4: {
-    label: "Advanced",
-    description: "Highly proficient",
-    color: "text-primary",
-    bgColor: "bg-primary",
-  },
-  3: {
-    label: "Intermediate",
-    description: "Actively learning",
-    color: "text-yellow-500",
-    bgColor: "bg-yellow-500",
   },
 };
 
 const Skills = () => {
-  const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const [activeCategory, setActiveCategory] = useState("expertise");
+
+  const categories = [
+    { key: "expertise", label: "Core Stack", icon: FaCode },
+    { key: "tools", label: "Tools & Libraries", icon: FaLayerGroup },
+    { key: "backend", label: "Backend & APIs", icon: FaServer },
+    { key: "learning", label: "Learning", icon: FaRocket },
+  ];
+
+  const getLevelColor = (level) => {
+    switch (level) {
+      case "Expert":
+        return "text-green-500";
+      case "Advanced":
+        return "text-primary";
+      case "Intermediate":
+        return "text-yellow-500";
+      case "Learning":
+        return "text-accent";
+      default:
+        return "text-base-content/50";
+    }
+  };
+
+  const getLevelDots = (level) => {
+    switch (level) {
+      case "Expert":
+        return 5;
+      case "Advanced":
+        return 4;
+      case "Intermediate":
+        return 3;
+      case "Learning":
+        return 2;
+      default:
+        return 1;
+    }
+  };
 
   return (
-    <main className="bg-base-100 section-spacing">
-      <div className="container-page">
-        {/* ========== HEADER ========== */}
-        <motion.section
-          ref={sectionRef}
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="mb-20"
+    <section className="relative section-spacing overflow-hidden bg-base-100">
+      {/* Background Ambience */}
+      <div className="absolute inset-0 pointer-events-none opacity-40">
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/10 blur-[120px] rounded-full" />
+        <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-accent/10 blur-[120px] rounded-full" />
+      </div>
+
+      <div className="container-page relative z-10">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mb-16"
         >
           {/* Badge */}
-          <motion.div
-            className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-base-200/80 border border-base-content/10 backdrop-blur-sm mb-6"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ delay: 0.2, duration: 0.6 }}
-          >
-            <FaRocket className="text-primary text-sm" />
-            <span className="text-[10px] font-black tracking-[0.4em] uppercase text-primary">
-              Technical Skills
+          <div className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm mb-8">
+            <FaCode className="text-primary" size={14} />
+            <span className="text-xs font-black tracking-[0.2em] uppercase text-primary">
+              Technical Arsenal
             </span>
-          </motion.div>
+          </div>
 
           {/* Title */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-tight mb-6">
-            Skills & <span className="text-gradient">Expertise</span>
-          </h1>
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[0.95] mb-6">
+            Tech Stack & <span className="text-">Expertise</span>
+          </h2>
 
-          {/* Subtitle */}
-          <p className="text-lg md:text-xl text-base-content/70 max-w-3xl leading-relaxed">
-            <strong>2+ years</strong> of hands-on development experience
-            building{" "}
-            <span className="text-primary font-semibold">production-ready</span>{" "}
-            web applications. Specialized in the <strong>MERN stack</strong>{" "}
-            with a focus on{" "}
-            <span className="text-primary font-semibold">clean code</span>,{" "}
-            <span className="text-accent font-semibold">scalability</span>, and{" "}
-            <span className="text-primary font-semibold">user experience</span>.
+          <p className="text-lg md:text-xl text-base-content/70 max-w-2xl leading-relaxed">
+            <span className="text-primary font-semibold">2+ years</span>{" "}
+            building production-grade applications. From concept to deployment,
+            I craft <span className="text-accent font-semibold">scalable</span>,{" "}
+            <span className="text-primary font-semibold">secure</span>, and{" "}
+            <span className="text-base-content font-semibold">
+              user-centric
+            </span>{" "}
+            solutions.
           </p>
-        </motion.section>
+        </motion.div>
 
-        {/* ========== CATEGORIES (CARD-BASED) ========== */}
-        <div className="space-y-16 mb-20">
-          {SKILL_CATEGORIES.map((category, catIdx) => {
-            const categoryRef = useRef(null);
-            const isCategoryInView = useInView(categoryRef, {
-              once: true,
-              margin: "-80px",
-            });
-
-            return (
-              <motion.div
-                key={category.id}
-                ref={categoryRef}
-                initial={{ opacity: 0, y: 40 }}
-                animate={isCategoryInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-              >
-                {/* Category Header */}
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="p-4 rounded-2xl bg-primary/10">
-                    <category.icon className="text-3xl md:text-4xl text-primary" />
-                  </div>
-                  <div className="flex-1">
-                    <h2 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tight mb-1">
-                      {category.title}
-                    </h2>
-                    <p className="text-sm md:text-base text-base-content/60">
-                      {category.description}
-                    </p>
-                  </div>
-                  {/* Skill Count */}
-                  <div className="hidden sm:flex items-center justify-center w-14 h-14 rounded-full bg-base-200/80 border border-base-content/10">
-                    <div className="text-center">
-                      <div className="text-xl font-black text-primary">
-                        {category.skills.length}
-                      </div>
-                      <div className="text-[7px] uppercase tracking-wider font-bold text-base-content/50">
-                        Skills
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Skills Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                  {category.skills.map((skill, idx) => (
-                    <motion.div
-                      key={skill.name}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={isCategoryInView ? { opacity: 1, scale: 1 } : {}}
-                      transition={{
-                        delay: idx * 0.05,
-                        duration: 0.5,
-                        ease: "easeOut",
-                      }}
-                      whileHover={{ y: -4, scale: 1.02 }}
-                      className="group"
-                    >
-                      <div className="relative p-5 md:p-6 rounded-2xl bg-base-200/50 border border-base-content/5 hover:border-primary/20 hover:bg-base-200/80 transition-all duration-300 h-full">
-                        {/* Icon & Badge Row */}
-                        <div className="flex items-center justify-between mb-4">
-                          <div
-                            className="p-2.5 md:p-3 rounded-xl transition-transform group-hover:scale-110 duration-300"
-                            style={{ backgroundColor: `${skill.color}15` }}
-                          >
-                            <skill.icon
-                              className="text-2xl md:text-3xl"
-                              style={{ color: skill.color }}
-                            />
-                          </div>
-
-                          {/* Proficiency Badge */}
-                          <div
-                            className={`px-2.5 md:px-3 py-1 rounded-full text-[8px] md:text-[9px] font-black uppercase tracking-wider ${
-                              PROFICIENCY_LABELS[skill.proficiency].color
-                            } bg-base-300/50`}
-                          >
-                            {PROFICIENCY_LABELS[skill.proficiency].label}
-                          </div>
-                        </div>
-
-                        {/* Skill Name */}
-                        <h3 className="text-base md:text-lg font-bold mb-3 group-hover:text-primary transition-colors">
-                          {skill.name}
-                        </h3>
-
-                        {/* Proficiency Dots */}
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="flex gap-1.5">
-                            {[1, 2, 3, 4, 5].map((level) => (
-                              <motion.div
-                                key={level}
-                                className="relative"
-                                initial={{ scale: 0 }}
-                                animate={isCategoryInView ? { scale: 1 } : {}}
-                                transition={{
-                                  delay: 0.3 + idx * 0.03 + level * 0.05,
-                                  type: "spring",
-                                  stiffness: 200,
-                                  damping: 15,
-                                }}
-                              >
-                                <div
-                                  className={`w-2 h-2 md:w-2.5 md:h-2.5 rounded-full transition-all duration-300 ${
-                                    level <= skill.proficiency
-                                      ? PROFICIENCY_LABELS[skill.proficiency]
-                                          .bgColor
-                                      : "bg-base-300"
-                                  } ${
-                                    level <= skill.proficiency
-                                      ? "scale-100"
-                                      : "scale-75 opacity-40"
-                                  }`}
-                                />
-                                {/* Subtle Glow */}
-                                {level <= skill.proficiency && (
-                                  <div
-                                    className={`absolute inset-0 rounded-full ${
-                                      PROFICIENCY_LABELS[skill.proficiency]
-                                        .bgColor
-                                    } blur-[2px] opacity-30`}
-                                  />
-                                )}
-                              </motion.div>
-                            ))}
-                          </div>
-                          <span className="text-[10px] md:text-xs text-base-content/50 font-medium">
-                            {skill.proficiency}/5
-                          </span>
-                        </div>
-
-                        {/* Level Description */}
-                        <p className="text-[10px] md:text-xs text-base-content/50">
-                          {PROFICIENCY_LABELS[skill.proficiency].description}
-                        </p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        {/* ========== EXPERIENCE STATS ========== */}
-        <motion.section
-          initial={{ opacity: 0, y: 30 }}
+        {/* Category Tabs */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-20"
+          viewport={{ once: true }}
+          transition={{ delay: 0.2, duration: 0.6 }}
+          className="flex flex-wrap gap-3 mb-12"
         >
-          {[
-            {
-              icon: FaLayerGroup,
-              value: "23+",
-              label: "Technologies",
-              sublabel: "Frontend, backend & tools",
-            },
-            {
-              icon: FaCode,
-              value: "2+",
-              label: "Years Experience",
-              sublabel: "Consistent development",
-            },
-            {
-              icon: FaRocket,
-              value: "92+",
-              label: "Projects Built",
-              sublabel: "Production-ready apps",
-            },
-          ].map((stat, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1, duration: 0.6, ease: "easeOut" }}
-              whileHover={{ y: -3, scale: 1.02 }}
-              className="relative overflow-hidden rounded-3xl bg-base-200/50 border border-base-content/5 p-6 md:p-8"
+          {categories.map((cat) => (
+            <motion.button
+              key={cat.key}
+              onClick={() => setActiveCategory(cat.key)}
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.97 }}
+              className={`
+                flex items-center gap-2 px-6 py-3 rounded-2xl font-semibold text-sm
+                border-2 transition-all duration-300
+                ${
+                  activeCategory === cat.key
+                    ? "bg-primary text-primary-content border-primary shadow-lg shadow-primary/20"
+                    : "bg-base-200/40 text-base-content border-base-content/10 hover:border-primary/30"
+                }
+              `}
             >
-              <div className="relative z-10">
-                <stat.icon className="text-3xl md:text-4xl text-primary mb-4" />
-                <div className="text-3xl md:text-4xl font-black text-primary mb-2">
-                  {stat.value}
-                </div>
-                <p className="text-sm font-bold text-base-content/80 mb-1">
-                  {stat.label}
-                </p>
-                <p className="text-xs text-base-content/60">{stat.sublabel}</p>
-              </div>
-              {/* Subtle Icon Background */}
-              <div className="absolute -bottom-8 -right-8 text-[10rem] text-primary/5">
-                <stat.icon />
-              </div>
-            </motion.div>
+              <cat.icon size={16} />
+              {cat.label}
+            </motion.button>
           ))}
-        </motion.section>
+        </motion.div>
 
-        {/* ========== PROFESSIONAL STATEMENT ========== */}
-        <motion.section
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative rounded-3xl overflow-hidden bg-base-200/50 border border-base-content/10 p-8 md:p-12"
+        {/* Active Category Display */}
+        <motion.div
+          key={activeCategory}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.4 }}
+          className="mb-12"
         >
-          <div className="relative z-10 max-w-4xl">
-            <h3 className="text-2xl md:text-3xl font-black mb-4">
-              Production-Ready <span className="text-gradient">Developer</span>
-            </h3>
-            <p className="text-base-content/70 leading-relaxed mb-6">
-              I don't just learn technologies — I build with them. Every skill
-              represents real projects, from implementing{" "}
-              <strong>JWT authentication systems</strong> to integrating{" "}
-              <strong>Stripe payment gateways</strong>. My code is{" "}
-              <span className="text-primary font-semibold">clean</span>,{" "}
-              <span className="text-accent font-semibold">documented</span>, and{" "}
-              <span className="text-primary font-semibold">scalable</span> by
-              design.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              {[
-                "Clean Code",
-                "Best Practices",
-                "Scalable Architecture",
-                "Documentation",
-              ].map((tag, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, x: -10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.05, duration: 0.4 }}
-                  className="px-4 py-2 rounded-xl bg-base-100/50 border border-base-content/10 text-xs font-bold uppercase tracking-wider"
-                >
-                  {tag}
-                </motion.div>
-              ))}
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <h3 className="text-3xl md:text-4xl font-black tracking-tight mb-2">
+                {SKILL_DATA[activeCategory].title}
+              </h3>
+              <p className="text-base-content/60">
+                {SKILL_DATA[activeCategory].subtitle}
+              </p>
             </div>
           </div>
-        </motion.section>
+
+          {/* Skills Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {SKILL_DATA[activeCategory].skills.map((skill, idx) => (
+              <motion.div
+                key={skill.name}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: idx * 0.05, duration: 0.3 }}
+                whileHover={{ y: -6, scale: 1.03 }}
+                className="relative group"
+              >
+                <div className="relative bg-base-200/50 backdrop-blur-sm border border-base-content/5 rounded-2xl p-6 hover:bg-base-200/80 hover:border-primary/30 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5">
+                  {/* Icon */}
+                  <div
+                    className="w-14 h-14 rounded-xl flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110"
+                    style={{
+                      background: `linear-(135deg, ${skill.color}20, ${skill.color}10)`,
+                    }}
+                  >
+                    <skill.icon size={28} style={{ color: skill.color }} />
+                  </div>
+
+                  {/* Name */}
+                  <h4 className="font-bold text-base mb-2 text-base-content leading-tight">
+                    {skill.name}
+                  </h4>
+
+                  {/* Level Badge */}
+                  <div className="flex items-center justify-between">
+                    <span
+                      className={`text-xs font-black uppercase tracking-wider ${getLevelColor(
+                        skill.level,
+                      )}`}
+                    >
+                      {skill.level}
+                    </span>
+
+                    {/* Level Dots */}
+                    <div className="flex gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <div
+                          key={i}
+                          className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                            i < getLevelDots(skill.level)
+                              ? getLevelColor(skill.level).replace(
+                                  "text-",
+                                  "bg-",
+                                )
+                              : "bg-base-content/10"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Hover Glow */}
+                  <div
+                    className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none"
+                    style={{
+                      background: `radial-(circle at center, ${skill.color}, transparent 70%)`,
+                    }}
+                  />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Bottom Stats/Highlights */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
+          {/* Stat 1 */}
+          <div className="relative overflow-hidden rounded-2xl bg--to-br from-primary/10 to-transparent border border-primary/20 p-6">
+            <div className="relative z-10">
+              <div className="text-4xl font-black text-primary mb-2">20+</div>
+              <p className="text-sm font-semibold text-base-content/80">
+                Technologies Mastered
+              </p>
+              <p className="text-xs text-base-content/60 mt-1">
+                Across frontend, backend & tools
+              </p>
+            </div>
+            <div className="absolute -bottom-4 -right-4 text-8xl text-primary/5">
+              <FaCode />
+            </div>
+          </div>
+
+          {/* Stat 2 */}
+          <div className="relative overflow-hidden rounded-2xl bg--to-br from-accent/10 to-transparent border border-accent/20 p-6">
+            <div className="relative z-10">
+              <div className="text-4xl font-black text-accent mb-2">15+</div>
+              <p className="text-sm font-semibold text-base-content/80">
+                Production Projects
+              </p>
+              <p className="text-xs text-base-content/60 mt-1">
+                Real-world experience building
+              </p>
+            </div>
+            <div className="absolute -bottom-4 -right-4 text-8xl text-accent/5">
+              <FaRocket />
+            </div>
+          </div>
+
+          {/* Stat 3 */}
+          <div className="relative overflow-hidden rounded-2xl bg--to-br from-green-500/10 to-transparent border border-green-500/20 p-6">
+            <div className="relative z-10">
+              <div className="text-4xl font-black text-green-500 mb-2">
+                Clean
+              </div>
+              <p className="text-sm font-semibold text-base-content/80">
+                Code Architecture
+              </p>
+              <p className="text-xs text-base-content/60 mt-1">
+                Scalable, maintainable, documented
+              </p>
+            </div>
+            <div className="absolute -bottom-4 -right-4 text-8xl text-green-500/5">
+              <FaShieldAlt />
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Professional Statement */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.6, duration: 0.6 }}
+          className="mt-12 p-8 rounded-3xl bg-base-200/40 border border-base-content/5 backdrop-blur-sm"
+        >
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
+            <div className="shrink-0 w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+              <FaShieldAlt size={32} />
+            </div>
+            <div className="flex-1">
+              <h4 className="text-xl font-black tracking-tight mb-2">
+                Production-Ready Mindset
+              </h4>
+              <p className="text-base-content/70 leading-relaxed">
+                I don't just write code—I architect{" "}
+                <span className="text-primary font-semibold">secure</span>,{" "}
+                <span className="text-accent font-semibold">optimized</span>,
+                and{" "}
+                <span className="text-base-content font-semibold">
+                  SEO-friendly
+                </span>{" "}
+                systems. Every project is built with scalability,
+                maintainability, and user experience at its core.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <div className="px-4 py-2 rounded-xl bg-base-100 border border-base-content/10 text-xs font-bold uppercase tracking-wider">
+                Clean Code
+              </div>
+              <div className="px-4 py-2 rounded-xl bg-base-100 border border-base-content/10 text-xs font-bold uppercase tracking-wider">
+                Best Practices
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
-    </main>
+    </section>
   );
 };
 

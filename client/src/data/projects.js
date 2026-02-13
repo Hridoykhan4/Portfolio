@@ -1,6 +1,6 @@
 // src/data/projects.js
 import masakkaliCover from "../assets/Projects/project1.png";
-import cafeAzizCover from "../assets/Projects/project2Cafe.png";
+import cafeAzizCover from "../assets/Projects/project2Cafe.jpg";
 import happinessHillCover from '../assets/Projects/project3Happiness.png'
 export const PROJECTS_DATA = [
   {

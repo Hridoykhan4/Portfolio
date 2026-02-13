@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import { motion } from "motion/react";
 import { useState, useMemo } from "react";
 import { Link } from "react-router";
@@ -156,7 +157,7 @@ const ProjectCard = ({ project, index }) => {
     >
       <div className="relative h-full flex flex-col rounded-3xl bg-base-200/50 border border-base-content/5 hover:border-primary/20 backdrop-blur-sm overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10">
         {/* Image */}
-        <div className="relative aspect-[16/10] overflow-hidden bg-base-300">
+        <div className="relative aspect-16/10 overflow-hidden bg-base-300">
           <Link to={`/projects/${project.id}`}>
             <motion.img
               src={project.cover}
@@ -168,7 +169,7 @@ const ProjectCard = ({ project, index }) => {
           </Link>
 
           {/* Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-base-200 via-base-200/40 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-base-200 via-base-200/40 to-transparent" />
 
           {/* Quick Actions */}
           <motion.div
@@ -232,7 +233,7 @@ const ProjectCard = ({ project, index }) => {
           </Link>
 
           {/* Description */}
-          <p className="text-sm text-base-content/60 leading-relaxed line-clamp-2 mb-4 flex-grow">
+          <p className="text-sm text-base-content/60 leading-relaxed line-clamp-2 mb-4 grow">
             {project.shortDescription}
           </p>
 
