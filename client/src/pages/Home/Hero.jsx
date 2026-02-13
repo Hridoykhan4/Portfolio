@@ -28,7 +28,7 @@ import {
 } from "react-icons/si";
 import ThemeContext from "../../contexts/ThemeContext";
 
-import profileLight from "../../assets/white.png";
+import profileLight from "../../assets/white.avif";
 import profileDark from "../../assets/dark.png";
 
 /* ---------------- Static Data ---------------- */
@@ -138,19 +138,13 @@ const Hero = () => {
   useEffect(() => {
     if (!isDesktop || !isVisible) return;
 
-    const el = sectionRef.current;
-    if (!el) return;
-
     const handleMouseMove = (e) => {
       mouseX.set(e.clientX - window.innerWidth / 2);
       mouseY.set(e.clientY - window.innerHeight / 2);
     };
 
-    el.addEventListener("mousemove", handleMouseMove);
-
-    return () => {
-      el.removeEventListener("mousemove", handleMouseMove);
-    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [isDesktop, isVisible, mouseX, mouseY]);
 
   /* ---------------- Resume Download ---------------- */
@@ -179,7 +173,7 @@ const Hero = () => {
       className="relative section-spacing min-h-screen bg-base-100 flex items-center overflow-hidden"
     >
       {/* Background Layer */}
-      <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none select-none">
         <div
           className="absolute -top-1/3 -left-1/3 w-[60%] h-[60%] rounded-full opacity-40 blur-[100px]"
           style={{
@@ -227,10 +221,9 @@ const Hero = () => {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
             className="text-center order-2 lg:order-1 lg:text-left"
           >
-            {/* 3D Layer ONLY for Visual Text */}
             <motion.div
               style={
                 isDesktop
@@ -245,7 +238,8 @@ const Hero = () => {
                 </span>
               </div>
 
-              <h2 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter leading-[0.92] mb-6">
+            
+              <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter leading-[0.92] mb-6">
                 <span className="text-base-content">Building </span>
                 <br />
                 <span className="text-gradient">
@@ -258,7 +252,7 @@ const Hero = () => {
                 </span>
                 <br />
                 <span className="text-base-content/90">Web Apps.</span>
-              </h2>
+              </h1>
 
               <p className="text-base md:text-lg lg:text-xl text-base-content/70 max-w-2xl mx-auto lg:mx-0 leading-relaxed mb-10 font-medium">
                 Hi, I'm{" "}
@@ -277,87 +271,95 @@ const Hero = () => {
               </p>
             </motion.div>
 
-            {/* CTA + SOCIAL (OUTSIDE 3D → fully clickable) */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mb-10 relative z-20">
-              <motion.div
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
-              >
-                <Link to="/contact" className="btn-cta group">
-                  <FaPaperPlane className="text-sm group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all" />
-                  Let's Talk
-                </Link>
-              </motion.div>
-
-              <motion.div
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
-              >
-                <button
-                  onClick={handleDownloadResume}
-                  disabled={downloadState === "loading"}
-                  className="btn-cta-soft group min-w-35"
+            {/* CTA + SOCIAL - Fixed for mobile wrapping */}
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6 mb-10 relative z-20">
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                <motion.div
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
                 >
-                  <AnimatePresence mode="wait">
-                    {downloadState === "idle" && (
-                      <motion.div
-                        key="idle"
-                        className="flex items-center gap-2"
-                      >
-                        <FaDownload className="text-sm" />
-                        <span>Resume</span>
-                      </motion.div>
-                    )}
-                    {downloadState === "loading" && (
-                      <motion.div
-                        key="loading"
-                        className="flex items-center gap-2"
-                      >
-                        <FaSpinner className="animate-spin" />
-                        <span>Loading...</span>
-                      </motion.div>
-                    )}
-                    {downloadState === "success" && (
-                      <motion.div
-                        key="success"
-                        className="flex items-center gap-2"
-                      >
-                        <FaCheck />
-                        <span>Downloaded!</span>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </button>
-              </motion.div>
+                  <Link to="/contact" className="btn-cta group">
+                    <FaPaperPlane className="text-sm group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all" />
+                    Let's Talk
+                  </Link>
+                </motion.div>
 
-              {[
-                { Icon: FaGithub, href: "https://github.com/Hridoykhan4" },
-                {
-                  Icon: FaLinkedin,
-                  href: "https://linkedin.com/in/md-toyob-uddin-hridoy",
-                },
-                { Icon: FaEnvelope, href: "mailto:toyobuddinhridoy@gmail.com" },
-              ].map(({ Icon, href }, i) => (
-                <motion.a
-                  key={i}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.15, y: -3 }}
-                  whileTap={{ scale: 0.9 }}
-                  className="social-icon-btn text-lg"
+                <motion.div
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
                 >
-                  <Icon />
-                </motion.a>
-              ))}
+                  <button
+                    onClick={handleDownloadResume}
+                    disabled={downloadState === "loading"}
+                    className="btn-cta-soft group min-w-35"
+                  >
+                    <AnimatePresence mode="wait">
+                      {downloadState === "idle" && (
+                        <motion.div
+                          key="idle"
+                          className="flex items-center gap-2"
+                        >
+                          <FaDownload className="text-sm" />
+                          <span>Resume</span>
+                        </motion.div>
+                      )}
+                      {downloadState === "loading" && (
+                        <motion.div
+                          key="loading"
+                          className="flex items-center gap-2"
+                        >
+                          <FaSpinner className="animate-spin" />
+                          <span>Loading...</span>
+                        </motion.div>
+                      )}
+                      {downloadState === "success" && (
+                        <motion.div
+                          key="success"
+                          className="flex items-center gap-2"
+                        >
+                          <FaCheck />
+                          <span>Done!</span>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </button>
+                </motion.div>
+              </div>
+
+              {/* Social Icons Row - Guaranteed single line on mobile */}
+              <div className="flex items-center gap-4 border-l-0 sm:border-l border-base-content/10 sm:pl-6">
+                {[
+                  { Icon: FaGithub, href: "https://github.com/Hridoykhan4" },
+                  {
+                    Icon: FaLinkedin,
+                    href: "https://linkedin.com/in/md-toyob-uddin-hridoy",
+                  },
+                  {
+                    Icon: FaEnvelope,
+                    href: "mailto:toyobuddinhridoy@gmail.com",
+                  },
+                ].map(({ Icon, href }, i) => (
+                  <motion.a
+                    key={i}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.15, y: -3 }}
+                    whileTap={{ scale: 0.9 }}
+                    className="social-icon-btn text-xl p-2"
+                  >
+                    <Icon />
+                  </motion.a>
+                ))}
+              </div>
             </div>
           </motion.div>
 
-          {/* IMAGE SIDE (unchanged visually) */}
+          {/* IMAGE SIDE */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={isVisible ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="relative order-1 lg:order-2"
           >
             <div className="relative w-full max-w-md mx-auto group">
@@ -371,12 +373,14 @@ const Hero = () => {
                 }}
               />
 
-              <div className="relative z-10 aspect-4/5 rounded-[3rem] overflow-hidden border-4 border-base-100 shadow-2xl">
+              <div className="relative z-10 aspect-4/5 rounded-[3rem] overflow-hidden border-4 border-base-100 shadow-2xl bg-base-200">
                 <img
                   src={profileImg}
-                  alt="Md. Toyob Uddin Hridoy - MERN Stack Developer"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  alt="Md. Toyob Uddin Hridoy - Full Stack MERN Developer Portfolio"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  fetchPriority="high"
                   loading="eager"
+                  decoding="async"
                 />
               </div>
             </div>

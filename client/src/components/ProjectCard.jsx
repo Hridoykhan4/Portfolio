@@ -1,30 +1,52 @@
-import { motion, useMotionValue, useTransform } from "motion/react";
-import { useState, useRef } from "react";
+/* eslint-disable no-unused-vars */
+import { motion, useMotionValue, useTransform, useSpring } from "motion/react";
+import { useState, useRef, memo, useCallback } from "react";
 import { Link } from "react-router";
 import { FaArrowRight, FaExternalLinkAlt, FaGithub } from "react-icons/fa";
 
-const ProjectCard = ({ project, index }) => {
+const ProjectCard = memo(({ project, index }) => {
   const cardRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
 
-  // 3D tilt effect
+  // --- 3D Physics ---
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const rotateX = useTransform(y, [-0.5, 0.5], ["5deg", "-5deg"]);
-  const rotateY = useTransform(x, [-0.5, 0.5], ["-5deg", "5deg"]);
 
-  const handleMouseMove = (e) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    const xPct = mouseX / width - 0.5;
-    const yPct = mouseY / height - 0.5;
-    x.set(xPct);
-    y.set(yPct);
-  };
+  // High-end spring settings for that "premium weight" feel
+  const springConfig = { stiffness: 150, damping: 20, mass: 0.6 };
+  const springX = useSpring(x, springConfig);
+  const springY = useSpring(y, springConfig);
+
+  // Subtle rotation for professional elegance (too much looks amateur)
+  const rotateX = useTransform(springY, [-0.5, 0.5], ["8deg", "-8deg"]);
+  const rotateY = useTransform(springX, [-0.5, 0.5], ["-8deg", "8deg"]);
+
+  // --- Dynamic Spotlight Effect ---
+  // This tracks the mouse to create a moving highlight/glare
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const spotlightOpacity = useSpring(isHovered ? 0.15 : 0, {
+    stiffness: 100,
+    damping: 30,
+  });
+
+  const handleMouseMove = useCallback(
+    (e) => {
+      if (!cardRef.current) return;
+      const rect = cardRef.current.getBoundingClientRect();
+
+      // Set 3D Tilt values
+      const xVal = (e.clientX - rect.left) / rect.width - 0.5;
+      const yVal = (e.clientY - rect.top) / rect.height - 0.5;
+      x.set(xVal);
+      y.set(yVal);
+
+      // Set Spotlight values
+      mouseX.set(e.clientX - rect.left);
+      mouseY.set(e.clientY - rect.top);
+    },
+    [mouseX, mouseY, x, y],
+  );
 
   const handleMouseLeave = () => {
     setIsHovered(false);
@@ -35,10 +57,14 @@ const ProjectCard = ({ project, index }) => {
   return (
     <motion.article
       ref={cardRef}
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, scale: 0.95, y: 40 }}
+      whileInView={{ opacity: 1, scale: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
+      transition={{
+        duration: 0.8,
+        delay: index * 0.1,
+        ease: [0.16, 1, 0.3, 1], // Custom Expo-Out ease
+      }}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={handleMouseLeave}
@@ -47,117 +73,131 @@ const ProjectCard = ({ project, index }) => {
         rotateY,
         transformStyle: "preserve-3d",
       }}
-      className="group h-full"
+      className="group h-full relative"
     >
-      <div className="relative h-full flex flex-col rounded-3xl bg-base-200/50 border border-base-content/5 hover:border-primary/20 backdrop-blur-sm overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10">
-        {/* --- IMAGE SECTION START --- */}
+      <div className="relative h-full flex flex-col rounded-[2.5rem] bg-base-100/40 border border-white/10 dark:border-white/5 backdrop-blur-2xl overflow-hidden shadow-2xl transition-all duration-700 group-hover:shadow-primary/20 group-hover:border-primary/40">
+        {/* 1. Dynamic Spotlight Glare */}
+        <motion.div
+          className="absolute inset-0 z-30 pointer-events-none"
+          style={{
+            opacity: spotlightOpacity,
+            background: `radial-gradient(600px circle at ${mouseX}px ${mouseY}px, rgba(255,255,255,0.3), transparent 40%)`,
+          }}
+        />
+
+        {/* --- IMAGE SECTION --- */}
         <div
-          className="relative aspect-16/10 overflow-hidden bg-base-300 block"
-          style={{ transform: "translateZ(20px)" }}
+          className="relative aspect-16/11 overflow-hidden"
+          style={{ transform: "translateZ(30px)" }}
         >
-          {/* Main Link for the Image (Now Siblings with the overlay, not Parent) */}
+          {/* Main Overlay Link */}
           <Link
             to={`/projects/${project.id}`}
-            className="absolute inset-0 z-10"
-            aria-label={project.title}
+            className="absolute inset-0 z-20"
+            aria-label={`Project: ${project.title}`}
           />
 
           <motion.img
             src={project.cover}
             alt={project.title}
-            className="w-full h-full object-cover"
-            animate={{ scale: isHovered ? 1.08 : 1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="w-full h-full object-cover grayscale-20 group-hover:grayscale-0 transition-all duration-700"
+            animate={{ scale: isHovered ? 1.1 : 1 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           />
 
-          <div className="absolute inset-0 bg-linear-to-t from-base-200 via-base-200/50 to-transparent" />
-
-          {/* Hover Overlay - z-20 puts it ABOVE the Link so buttons work */}
+          {/* Luxury Frosted Overlay on Hover */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: isHovered ? 1 : 0 }}
-            className="absolute inset-0 z-20 bg-base-100/95 backdrop-blur-sm flex items-center justify-center pointer-events-none"
+            className="absolute inset-0 z-30 bg-primary/10 backdrop-blur-xs flex items-center justify-center"
           >
-            <div className="flex flex-col items-center gap-4 pointer-events-auto">
-              <div className="flex gap-3">
-                <a
-                  href={project.links.live}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 rounded-xl bg-primary text-primary-content hover:scale-110 transition-transform"
-                >
-                  <FaExternalLinkAlt size={18} />
-                </a>
-                {project.links.github.client && (
-                  <a
-                    href={project.links.github.client}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-3 rounded-xl bg-base-content text-base-100 hover:scale-110 transition-transform"
-                  >
-                    <FaGithub size={18} />
-                  </a>
-                )}
-              </div>
-              <span className="text-sm font-bold uppercase tracking-wider text-primary">
-                Quick Links
-              </span>
+            <div className="flex gap-4 translate-z-50 pointer-events-auto">
+              <motion.a
+                whileHover={{ y: -5, scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                href={project.links.live}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-14 h-14 rounded-full bg-white text-black flex items-center justify-center shadow-xl hover:bg-primary hover:text-white transition-colors"
+              >
+                <FaExternalLinkAlt size={20} />
+              </motion.a>
+              <motion.a
+                whileHover={{ y: -5, scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                href={project.links.github.client}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-14 h-14 rounded-full bg-black text-white flex items-center justify-center shadow-xl hover:bg-primary transition-colors"
+              >
+                <FaGithub size={22} />
+              </motion.a>
             </div>
           </motion.div>
 
-          {/* Tech Tags */}
-          <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2 z-30">
+          {/* Floating Tags */}
+          <div className="absolute top-6 left-6 flex flex-wrap gap-2 z-40 pointer-events-none">
             {project.tags.slice(0, 3).map((tag) => (
               <span
                 key={tag}
-                className="px-3 py-1.5 text-xs font-bold uppercase tracking-wide bg-base-100/90 backdrop-blur-md border border-base-content/10 rounded-lg"
+                className="px-4 py-1.5 text-[10px] font-black uppercase tracking-widest bg-black/60 text-white backdrop-blur-xl border border-white/20 rounded-full shadow-lg"
               >
                 {tag}
               </span>
             ))}
           </div>
         </div>
-        {/* --- IMAGE SECTION END --- */}
 
-        {/* Content Section */}
+        {/* --- CONTENT SECTION --- */}
         <div
-          className="flex-1 flex flex-col p-6 md:p-8"
-          style={{ transform: "translateZ(30px)" }}
+          className="relative flex-1 flex flex-col p-8 md:p-10"
+          style={{
+            transform: "translateZ(60px)",
+            transformStyle: "preserve-3d",
+          }}
         >
-          <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-primary/70 mb-3">
-            <span className="w-2 h-2 rounded-full bg-primary" />
-            {project.category}
+          {/* Animated Category Badge */}
+          <div className="flex items-center gap-3 mb-6">
+            <span className="h-px w-8 bg-primary group-hover:w-12 transition-all duration-500" />
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
+              {project.category}
+            </span>
           </div>
 
-          <Link to={`/projects/${project.id}`}>
-            <h3 className="text-xl md:text-2xl lg:text-3xl font-black tracking-tight mb-3 group-hover:text-primary transition-colors">
-              {project.title}
-            </h3>
-          </Link>
+          <h3 className="text-2xl md:text-3xl font-black tracking-tighter mb-4 leading-none group-hover:text-primary transition-colors duration-300">
+            {project.title}
+          </h3>
 
-          <p className="text-sm md:text-base text-base-content/60 leading-relaxed mb-6 line-clamp-2 grow">
+          <p className="text-sm md:text-base text-base-content/60 font-medium leading-relaxed mb-8 line-clamp-2 grow">
             {project.shortDescription}
           </p>
 
-          <Link
-            to={`/projects/${project.id}`}
-            className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-base-content/70 hover:text-primary transition-colors group/link"
-          >
-            View Case Study
-            <FaArrowRight className="transition-transform group-hover/link:translate-x-1" />
-          </Link>
+          <div className="mt-auto pt-6 border-t border-base-content/5">
+            <Link
+              to={`/projects/${project.id}`}
+              className="group/btn inline-flex items-center gap-4 text-xs font-black uppercase tracking-[0.2em] transition-all"
+            >
+              <span className="relative">
+                Explore Case Study
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover/btn:w-full transition-all duration-500" />
+              </span>
+              <div className="w-8 h-8 rounded-full border border-base-content/20 flex items-center justify-center group-hover/btn:bg-primary group-hover/btn:border-primary group-hover/btn:text-white transition-all duration-500">
+                <FaArrowRight
+                  className="-rotate-45 group-hover/btn:rotate-0 transition-transform duration-500"
+                  size={12}
+                />
+              </div>
+            </Link>
+          </div>
         </div>
 
-        {/* Hover Glow Effect */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isHovered ? 1 : 0 }}
-          className="absolute inset-0 pointer-events-none bg-linear-to-br from-primary/5 via-transparent to-accent/5"
-          style={{ transform: "translateZ(10px)" }}
-        />
+        {/* High-End Ambient Background Glow */}
+        <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-primary/10 blur-[100px] rounded-full pointer-events-none group-hover:bg-primary/20 transition-colors duration-700" />
       </div>
     </motion.article>
   );
-};
+});
+
+ProjectCard.displayName = "ProjectCard";
 
 export default ProjectCard;

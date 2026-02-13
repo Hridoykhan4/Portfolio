@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import { motion } from "motion/react";
 import { useRef } from "react";
 import { useParams, Link, Navigate } from "react-router";
@@ -176,7 +177,7 @@ const ProjectDetails = () => {
                       transition={{ delay: 0.5 + idx * 0.05 }}
                       className="flex items-start gap-3 p-5 rounded-2xl bg-base-200/50 border border-base-content/5 hover:border-primary/20 transition-colors"
                     >
-                      <FaCheckCircle className="text-primary mt-1 flex-shrink-0" />
+                      <FaCheckCircle className="text-primary mt-1 shrink-0" />
                       <div>
                         <h3 className="font-bold mb-1 text-base-content">
                           {feature.title}
@@ -209,7 +210,7 @@ const ProjectDetails = () => {
                         transition={{ delay: 0.6 + idx * 0.05 }}
                         className="flex items-start gap-3 text-base-content/70"
                       >
-                        <span className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0" />
+                        <span className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />
                         <span>{highlight}</span>
                       </motion.div>
                     ))}

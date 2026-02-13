@@ -7,7 +7,6 @@ import SmoothCursor from "../components/SmoothCursor";
 
 const MainLayout = () => {
   const { pathname } = useLocation();
- 
 
   useEffect(() => {
     const scrollToTop = () => {
@@ -30,9 +29,7 @@ const MainLayout = () => {
         <Navbar />
 
         <main id="main-content" className="grow w-full overflow-x-hidden">
-        
-            <Outlet />
- 
+          <Outlet />
         </main>
 
         <Footer />

@@ -8,7 +8,7 @@ import NewsletterSection from "./NewsletterSection";
 const Home = () => {
   return (
     <section>
-      <Hero />
+      {/* <Hero /> */}
 
       <FeaturedProjects />
 
