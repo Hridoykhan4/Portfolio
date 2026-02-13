@@ -402,18 +402,10 @@
     );
   }
 
-  /* Z-axis layers */
-  .z-10 {
-    transform: translateZ(10px);
-  }
+.z-depth-10 { transform: translateZ(10px); }
+.z-depth-20 { transform: translateZ(20px); }
+.z-depth-30 { transform: translateZ(30px); }
 
-  .z-20 {
-    transform: translateZ(20px);
-  }
-
-  .z-30 {
-    transform: translateZ(30px);
-  }
 }
 
 /* ================================================================
@@ -485,12 +477,6 @@ body {
 
 /* 1. Target the root div React creates */
 #root {
-  overflow-x: hidden;
   /* Ensure the root doesn't create a second vertical scrollbar */
   overflow-y: visible; 
-}
-
-/* 2. Target the ScrollReveal containers specifically */
-div[style*="opacity"] {
-  overflow: visible !important;
 }

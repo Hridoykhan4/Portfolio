@@ -15,7 +15,6 @@ export const PROJECTS_DATA = [
     cover: masakkaliCover,
     gallery: [
       masakkaliCover,
-      // Add more images as you have them
     ],
 
     // Tech Stack
@@ -72,9 +71,11 @@ export const PROJECTS_DATA = [
 
     // Links
     links: {
-      github: "https://github.com/Hridoykhan4/Masakkali_Courier",
       live: "https://masakkali-courier.web.app",
-      case_study: null, // Add later if you create one
+      github: {
+        client: "https://github.com/Hridoykhan4/Masakkali_Courier_Client",
+        server: "https://github.com/Hridoykhan4/Masakkali_Courier_Server",
+      },
     },
 
     // Stats
@@ -94,7 +95,6 @@ export const PROJECTS_DATA = [
 
     // Display Priority
     order: 1,
-    gridSpan: "lg:col-span-2 lg:row-span-2", // Hero card
   },
 
   {
@@ -145,9 +145,11 @@ export const PROJECTS_DATA = [
     ],
 
     links: {
-      github: "https://github.com/Hridoykhan4/Cafe_Aziz_Hotel_Kaptai",
       live: "https://cafe-aziz.web.app",
-      case_study: null,
+      github: {
+        client: "https://github.com/Hridoykhan4/Cafe_Aziz_Hotel_Kaptai_Client",
+        server: "https://github.com/Hridoykhan4/Cafe_Aziz_Hotel_Kaptai_Server",
+      },
     },
 
     stats: {
@@ -160,7 +162,6 @@ export const PROJECTS_DATA = [
     featured: true,
     completionDate: "2024-10",
     order: 2,
-    gridSpan: "lg:col-span-1 lg:row-span-1",
   },
 
   {

@@ -251,7 +251,7 @@ const About = () => {
                   </motion.div>
                   <div>
                     <p className="text-xs font-black uppercase tracking-wider text-primary mb-2">
-                      2022 — 2024
+                      2022 — 2025
                     </p>
                     <h3 className="text-xl font-black mb-1">
                       BSc in Computer Science & Engineering
@@ -381,7 +381,7 @@ const About = () => {
                 transition={{ delay: idx * 0.05 }}
                 className="flex items-start gap-3 p-5 rounded-2xl bg-base-200/30 border border-base-content/5"
               >
-                <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0" />
+                <div className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />
                 <p className="text-sm font-medium text-base-content/80">
                   {value}
                 </p>
