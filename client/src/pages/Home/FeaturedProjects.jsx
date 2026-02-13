@@ -6,12 +6,9 @@ import { getFeaturedProjects } from "../../data/projects";
 import ProjectCard from "../../components/ProjectCard";
 
 const FeaturedProjects = () => {
-  const containerRef = useRef(null);
   const featuredProjects = getFeaturedProjects();
-
   return (
     <section
-      ref={containerRef}
       className="section-spacing relative bg-base-100 overflow-hidden"
     >
       {/* Subtle Background */}
