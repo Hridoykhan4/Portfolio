@@ -3,7 +3,7 @@ import Hero from "./Hero";
 import ExpertiseMarquee from "./ExpertiseMarquee";
 import FeaturedProjects from "./FeaturedProjects";
 import AcademicSnapshot from "./AcademicSnapshot";
-import NewsletterSection from "./NewsLetterSection";
+import NewsletterSection from "./NewsletterSection";
 
 const Home = () => {
   return (
