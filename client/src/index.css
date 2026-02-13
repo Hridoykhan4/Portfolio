@@ -121,6 +121,15 @@
     
   }
 
+
+  nav {
+    /* Tell the browser to prepare the GPU for these changes */
+    will-change: transform, opacity;
+    /* Force Hardware Acceleration */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
   body {
     @apply bg-base-100 text-base-content min-h-screen ;
     -webkit-font-smoothing: antialiased;

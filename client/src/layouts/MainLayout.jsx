@@ -1,5 +1,5 @@
 import { Outlet, useLocation, useNavigation } from "react-router";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import Navbar from "../pages/shared/Navbar/Navbar";
 import Footer from "../pages/shared/Footer/Footer";
 import SmoothScroll from "../components/SmoothScroll";
@@ -8,47 +8,31 @@ import SmoothCursor from "../components/SmoothCursor";
 
 const MainLayout = () => {
   const { pathname } = useLocation();
-  const lenisRef = useRef(null);
   const navigation = useNavigation();
-  useEffect(() => {
-    const getLenisInstance = () => {
-      const checkInterval = setInterval(() => {
-        if (window.lenis) {
-          lenisRef.current = window.lenis;
-          clearInterval(checkInterval);
-        }
-      }, 100);
 
-      return () => clearInterval(checkInterval);
+  useEffect(() => {
+    const scrollToTop = () => {
+      if (window.lenis) {
+        window.lenis.scrollTo(0, { duration: 1.2, immediate: true });
+      } else {
+        window.scrollTo(0, 0);
+      }
     };
-
-    getLenisInstance();
-  }, []);
-
-  useEffect(() => {
-    if (lenisRef.current) {
-      lenisRef.current.scrollTo(0, {
-        duration: 1,
-        immediate: false,
-      });
-    } else {
-      window.scrollTo(0, 0);
-    }
+    const timeout = setTimeout(scrollToTop, 10);
+    return () => clearTimeout(timeout);
   }, [pathname]);
-
   return (
     <SmoothScroll>
       <div className="hidden lg:block">
-        <SmoothCursor></SmoothCursor>
+        <SmoothCursor />
       </div>
-      <div className=" flex flex-col selection:bg-primary/30">
+
+      <div className="flex flex-col selection:bg-primary/30 min-h-screen">
         <Navbar />
-        <main
-          id="main-content"
-          className="grow min-h-screen w-full overflow-x-hidden"
-        >
+
+        <main id="main-content" className="grow w-full overflow-x-hidden">
           {navigation.state === "loading" ? (
-            <LoadingSpinner fullScreen></LoadingSpinner>
+            <LoadingSpinner fullScreen />
           ) : (
             <Outlet />
           )}

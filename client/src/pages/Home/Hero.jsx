@@ -374,7 +374,7 @@ const Hero = () => {
               <div className="relative z-10 aspect-4/5 rounded-[3rem] overflow-hidden border-4 border-base-100 shadow-2xl">
                 <img
                   src={profileImg}
-                  alt="Md. Toyob Uddin Hridoy"
+                  alt="Md. Toyob Uddin Hridoy - MERN Stack Developer"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   loading="eager"
                 />

@@ -1,56 +1,93 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
- <head>
+  <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="preload" href="/logo.svg" as="image" type="image/svg+xml" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#10b981" />
 
     <title>Md. Toyob Uddin Hridoy | Full Stack MERN Developer</title>
-    <meta name="description" content="Portfolio of Md. Toyob Uddin Hridoy (Hridoy). A Full Stack MERN Developer building high-performance web applications and scalable solutions." />
-    <meta name="keywords" content="Md. Toyob Uddin Hridoy, Toyob, Hridoy, MERN Stack Developer, React Developer Bangladesh, Toyob Hridoy Portfolio" />
+    <meta
+      name="description"
+      content="Portfolio of Md. Toyob Uddin Hridoy (Hridoy). A Full Stack MERN Developer building high-performance web applications and scalable solutions."
+    />
+    <meta
+      name="keywords"
+      content="Md. Toyob Uddin Hridoy, Toyob, Hridoy, MERN Stack Developer, React Developer Bangladesh, Toyob Hridoy Portfolio"
+    />
     <meta name="author" content="Md. Toyob Uddin Hridoy" />
-    <link rel="canonical" href="https://md-toyob-hridoy-portfolio.vercel.app/" />
-    <meta name="google-site-verification" content="R6qFGSSVuBVoxL_1f-OxnpL8PE80WBalosqDlWQ_c-M" />
+    <link
+      rel="canonical"
+      href="https://md-toyob-hridoy-portfolio.vercel.app/"
+    />
+    <meta
+      name="google-site-verification"
+      content="R6qFGSSVuBVoxL_1f-OxnpL8PE80WBalosqDlWQ_c-M"
+    />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://md-toyob-hridoy-portfolio.vercel.app/" />
-    <meta property="og:title" content="Md. Toyob Uddin Hridoy | MERN Developer" />
-    <meta property="og:description" content="Full Stack Developer specialized in React, Node.js, and MongoDB." />
-    <meta property="og:image" content="https://md-toyob-hridoy-portfolio.vercel.app/portfolio-preview.png" />
+    <meta
+      property="og:url"
+      content="https://md-toyob-hridoy-portfolio.vercel.app/"
+    />
+    <meta
+      property="og:title"
+      content="Md. Toyob Uddin Hridoy | MERN Developer"
+    />
+    <meta
+      property="og:description"
+      content="Full Stack Developer specialized in React, Node.js, and MongoDB."
+    />
+    <meta
+      property="og:image"
+      content="https://md-toyob-hridoy-portfolio.vercel.app/portfolio-preview.png"
+    />
 
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Md. Toyob Uddin Hridoy",
-      "url": "https://md-toyob-hridoy-portfolio.vercel.app/",
-      "alternateName": ["Hridoy", "Toyob", "Toyob Hridoy"],
-      "jobTitle": "Full Stack MERN Developer",
-      "knowsAbout": ["React", "Node.js", "MongoDB", "Express.js", "Full Stack Development"],
-      "sameAs": [
-        "https://github.com/Hridoykhan4",
-        "https://www.linkedin.com/in/md-toyob-uddin-hridoy"
-      ]
-    }
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Md. Toyob Uddin Hridoy",
+        "url": "https://md-toyob-hridoy-portfolio.vercel.app/",
+        "alternateName": ["Hridoy", "Toyob", "Toyob Hridoy"],
+        "jobTitle": "Full Stack MERN Developer",
+        "knowsAbout": [
+          "React",
+          "Node.js",
+          "MongoDB",
+          "Express.js",
+          "Full Stack Development"
+        ],
+        "sameAs": [
+          "https://github.com/Hridoykhan4",
+          "https://www.linkedin.com/in/md-toyob-uddin-hridoy"
+        ]
+      }
     </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
 
     <script>
       (function () {
         const saved = localStorage.getItem("theme");
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches;
         const theme = saved || (prefersDark ? "forest" : "light");
         document.documentElement.setAttribute("data-theme", theme);
         if (theme === "forest") document.documentElement.classList.add("dark");
       })();
     </script>
-</head>
+  </head>
 
-  <body class="font-inter antialiased bg-base-100 text-base-content selection:bg-primary/30 min-h-screen transition-colors duration-300">
+  <body
+    class="font-inter antialiased bg-base-100 text-base-content selection:bg-primary/30 min-h-screen transition-colors duration-300"
+  >
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src=" /src/main.jsx"></script>
   </body>
 </html>

@@ -50,12 +50,18 @@ const ProjectCard = ({ project, index }) => {
       className="group h-full"
     >
       <div className="relative h-full flex flex-col rounded-3xl bg-base-200/50 border border-base-content/5 hover:border-primary/20 backdrop-blur-sm overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10">
-        {/* Image Section */}
-        <Link
-          to={`/projects/${project.id}`}
+        {/* --- IMAGE SECTION START --- */}
+        <div
           className="relative aspect-16/10 overflow-hidden bg-base-300 block"
           style={{ transform: "translateZ(20px)" }}
         >
+          {/* Main Link for the Image (Now Siblings with the overlay, not Parent) */}
+          <Link
+            to={`/projects/${project.id}`}
+            className="absolute inset-0 z-10"
+            aria-label={project.title}
+          />
+
           <motion.img
             src={project.cover}
             alt={project.title}
@@ -64,32 +70,21 @@ const ProjectCard = ({ project, index }) => {
             transition={{ duration: 0.8, ease: "easeOut" }}
           />
 
-          {/* Gradient Overlay */}
           <div className="absolute inset-0 bg-linear-to-t from-base-200 via-base-200/50 to-transparent" />
 
-          {/* Hover Overlay with CTA */}
+          {/* Hover Overlay - z-20 puts it ABOVE the Link so buttons work */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: isHovered ? 1 : 0 }}
-            className="absolute inset-0 bg-base-100/95 backdrop-blur-sm flex items-center justify-center"
+            className="absolute inset-0 z-20 bg-base-100/95 backdrop-blur-sm flex items-center justify-center pointer-events-none"
           >
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{
-                scale: isHovered ? 1 : 0.8,
-                opacity: isHovered ? 1 : 0,
-              }}
-              transition={{ delay: 0.1 }}
-              className="flex flex-col items-center gap-4"
-            >
+            <div className="flex flex-col items-center gap-4 pointer-events-auto">
               <div className="flex gap-3">
                 <a
                   href={project.links.live}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
                   className="p-3 rounded-xl bg-primary text-primary-content hover:scale-110 transition-transform"
-                  aria-label="View live demo"
                 >
                   <FaExternalLinkAlt size={18} />
                 </a>
@@ -98,9 +93,7 @@ const ProjectCard = ({ project, index }) => {
                     href={project.links.github.client}
                     target="_blank"
                     rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
                     className="p-3 rounded-xl bg-base-content text-base-100 hover:scale-110 transition-transform"
-                    aria-label="View source code"
                   >
                     <FaGithub size={18} />
                   </a>
@@ -109,11 +102,11 @@ const ProjectCard = ({ project, index }) => {
               <span className="text-sm font-bold uppercase tracking-wider text-primary">
                 Quick Links
               </span>
-            </motion.div>
+            </div>
           </motion.div>
 
-          {/* Tech Tags - Always Visible */}
-          <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2">
+          {/* Tech Tags */}
+          <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2 z-30">
             {project.tags.slice(0, 3).map((tag) => (
               <span
                 key={tag}
@@ -123,32 +116,29 @@ const ProjectCard = ({ project, index }) => {
               </span>
             ))}
           </div>
-        </Link>
+        </div>
+        {/* --- IMAGE SECTION END --- */}
 
         {/* Content Section */}
         <div
           className="flex-1 flex flex-col p-6 md:p-8"
           style={{ transform: "translateZ(30px)" }}
         >
-          {/* Category Badge */}
           <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-primary/70 mb-3">
             <span className="w-2 h-2 rounded-full bg-primary" />
             {project.category}
           </div>
 
-          {/* Title */}
           <Link to={`/projects/${project.id}`}>
             <h3 className="text-xl md:text-2xl lg:text-3xl font-black tracking-tight mb-3 group-hover:text-primary transition-colors">
               {project.title}
             </h3>
           </Link>
 
-          {/* Description */}
           <p className="text-sm md:text-base text-base-content/60 leading-relaxed mb-6 line-clamp-2 grow">
             {project.shortDescription}
           </p>
 
-          {/* Bottom Action */}
           <Link
             to={`/projects/${project.id}`}
             className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-base-content/70 hover:text-primary transition-colors group/link"
