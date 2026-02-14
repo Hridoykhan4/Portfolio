@@ -1,9 +1,9 @@
 import Hero from "./Hero";
+import FeaturedProjects from "./FeaturedProjects";
+import ExpertiseMarquee from "./ExpertiseMarquee"; 
 import { lazy, Suspense } from "react";
 
-// Lazy load non-critical home sections
-const FeaturedProjects = lazy(() => import("./FeaturedProjects"));
-const ExpertiseMarquee = lazy(() => import("./ExpertiseMarquee"));
+
 const AcademicSnapshot = lazy(() => import("./AcademicSnapshot"));
 const NewsletterSection = lazy(() => import("./NewsletterSection"));
 
@@ -12,11 +12,15 @@ const Home = () => {
     <section>
       <Hero />
 
+      <FeaturedProjects />
+      <ExpertiseMarquee />
+
+    
       <Suspense
-        fallback={<div className="h-96 animate-pulse bg-base-200/50" />}
+        fallback={
+          <div className="h-96 bg-base-200/20 animate-pulse m-10 rounded-3xl" />
+        }
       >
-        <FeaturedProjects />
-        <ExpertiseMarquee />
         <AcademicSnapshot />
         <NewsletterSection />
       </Suspense>
