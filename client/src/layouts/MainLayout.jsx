@@ -1,5 +1,5 @@
 import { Outlet, useLocation, useNavigation } from "react-router";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import Navbar from "../pages/shared/Navbar/Navbar";
 import Footer from "../pages/shared/Footer/Footer";
 import SmoothScroll from "../components/SmoothScroll";
@@ -11,27 +11,33 @@ const MainLayout = () => {
   const isLoading = navigation.state === "loading";
 
   useEffect(() => {
+    // Immediate scroll reset on route change for better UX
     window.lenis?.scrollTo(0, { immediate: true });
     window.scrollTo(0, 0);
   }, [pathname]);
 
   return (
     <SmoothScroll>
+      {/* Client-side only cursor enhancement */}
       <div className="hidden lg:block">
         <SmoothCursor />
       </div>
 
-      <div className="flex flex-col min-h-screen relative selection:bg-primary/30">
-        {/* Instant Top Loading Bar */}
+      <div className="relative flex flex-col min-h-screen">
+        {/* Modern Progress Indicator */}
         {isLoading && (
-          <div className="fixed top-0 left-0 h-1 bg-primary z-[9999] w-full animate-pulse" />
+          <div className="fixed top-0 left-0 right-0 h-1 z-[9999] overflow-hidden bg-base-100">
+            <div className="h-full bg-primary animate-[scanline_2s_linear_infinite] w-1/2" />
+          </div>
         )}
 
         <Navbar />
 
-        <main id="main-content" className="grow w-full overflow-x-hidden">
-          {/* No Suspense here - Route 'lazy' handles it better */}
-          <Outlet />
+        {/* Main Content Area: Use 'relative' for Framer Motion anchors */}
+        <main id="main-content" className="relative grow w-full outline-none">
+          <Suspense fallback={<div className="min-h-screen bg-base-100" />}>
+            <Outlet />
+          </Suspense>
         </main>
 
         <Footer />

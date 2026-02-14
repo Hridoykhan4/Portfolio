@@ -1,31 +1,37 @@
+import { lazy, Suspense } from "react";
 import Hero from "./Hero";
 import FeaturedProjects from "./FeaturedProjects";
-import ExpertiseMarquee from "./ExpertiseMarquee"; 
-import { lazy, Suspense } from "react";
+import ExpertiseMarquee from "./ExpertiseMarquee";
 
-
+// Heavy/Non-critical sections
 const AcademicSnapshot = lazy(() => import("./AcademicSnapshot"));
 const NewsletterSection = lazy(() => import("./NewsletterSection"));
 
 const Home = () => {
   return (
-    <section>
+    <>
+      {/* 1. IDENTITY: Who you are (LCP Priority) */}
       <Hero />
-
+      
+      {/* 2. PROOF: What you built (The most important conversion) */}
       <FeaturedProjects />
+
+      {/* 3. TRANSITION: Modern visual break with skills marquee */}
       <ExpertiseMarquee />
 
-    
-      <Suspense
-        fallback={
-          <div className="h-96 bg-base-200/20 animate-pulse m-10 rounded-3xl" />
-        }
-      >
+      {/* 4. DEPTH: Supplemental info loaded as user scrolls */}
+      <Suspense fallback={<HomeSectionSkeleton />}>
         <AcademicSnapshot />
         <NewsletterSection />
       </Suspense>
-    </section>
+    </>
   );
 };
+
+const HomeSectionSkeleton = () => (
+  <div className="container-page py-20 opacity-10">
+    <div className="h-[400px] w-full bg-base-300 rounded-[3rem] animate-pulse" />
+  </div>
+);
 
 export default Home;

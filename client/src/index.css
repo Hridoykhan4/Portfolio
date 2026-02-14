@@ -64,15 +64,14 @@
     }
   }
 
-  @keyframes glow-pulse {
-    0%,
-    100% {
-      box-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
-    }
-    50% {
-      box-shadow: 0 0 40px rgba(37, 99, 235, 0.6);
-    }
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px color-mix(in srgb, var(--color-primary) 30%, transparent);
   }
+  50% {
+    box-shadow: 0 0 40px color-mix(in srgb, var(--color-primary) 60%, transparent);
+  }
+}
 }
 
 /* ================================================================
