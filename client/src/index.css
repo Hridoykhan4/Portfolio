@@ -114,28 +114,27 @@
     font-family: "Inter", "Plus Jakarta Sans", system-ui, sans-serif;
     @apply transition-colors duration-500;
     scroll-behavior: auto;
-    position: relative;
+    overflow-x: hidden; 
+    overflow-y: auto;   
+    height: auto;      
+    min-height: 100%;
     scrollbar-gutter: stable;
-    max-width: 100%;
-    overflow-y: scroll;
-    height: 100%;
   }
 
   nav {
-    /* Tell the browser to prepare the GPU for these changes */
     will-change: transform, opacity;
-    /* Force Hardware Acceleration */
     transform: translateZ(0);
     backface-visibility: hidden;
   }
 
-  body {
-    @apply bg-base-100 text-base-content min-h-screen;
+ body {
+    @apply bg-base-100 text-base-content;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     position: relative;
-    scrollbar-gutter: stable;
-    min-height: 100%;
+    min-height: 100vh; 
     overflow-y: visible;
+    overscroll-behavior-y: auto;
   }
 
   ::selection {
@@ -464,11 +463,6 @@ html {
    SCROLL OPTIMIZATIONS
   ================================================================ */
 
-/* Better scroll performance */
-body {
-  overscroll-behavior: none;
-  -webkit-overflow-scrolling: touch;
-}
 
 /* Prevent scroll jank */
 * {
@@ -480,6 +474,7 @@ body {
 
 /* 1. Target the root div React creates */
 #root {
-  /* Ensure the root doesn't create a second vertical scrollbar */
-  overflow-y: visible;
-}
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }

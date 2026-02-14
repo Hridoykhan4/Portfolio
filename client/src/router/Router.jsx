@@ -1,47 +1,79 @@
+import { lazy, Suspense } from "react";
 import { createBrowserRouter } from "react-router";
-import Home from "../pages/Home/Home";
 import MainLayout from "../layouts/MainLayout";
-import About from "../pages/About/About";
-import Projects from "../pages/Projects/Projects";
-import Skills from "../pages/Skills/Skills";
-import Contact from "../pages/Contact/Contact";
-import ProjectDetails from "../pages/ProjectDetails/ProjectDetails";
+
+// LAZY LOAD PAGES (Vite will create separate chunks for these)
+const Home = lazy(() => import("../pages/Home/Home"));
+const About = lazy(() => import("../pages/About/About"));
+const Projects = lazy(() => import("../pages/Projects/Projects"));
+const Skills = lazy(() => import("../pages/Skills/Skills"));
+const Contact = lazy(() => import("../pages/Contact/Contact"));
+const ProjectDetails = lazy(
+  () => import("../pages/ProjectDetails/ProjectDetails"),
+);
+
+// Loading State (Keep it minimal for 2026 aesthetic)
+const PageLoader = () => <div className="h-screen bg-base-100" />;
 
 const Router = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout></MainLayout>,
+    element: <MainLayout />,
     children: [
       {
         path: "/",
-        element: <Home></Home>,
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <Home />
+          </Suspense>
+        ),
       },
       {
-        path: '/about',
-        element: <About></About>
+        path: "/about",
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <About />
+          </Suspense>
+        ),
       },
       {
-        path: '/projects',
-        element: <Projects></Projects>
+        path: "/projects",
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <Projects />
+          </Suspense>
+        ),
       },
       {
-        path: '/skills',
-        element: <Skills></Skills>
+        path: "/skills",
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <Skills />
+          </Suspense>
+        ),
       },
       {
-        path: '/contact',
-        element: <Contact></Contact>
+        path: "/contact",
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <Contact />
+          </Suspense>
+        ),
       },
       {
-        path: '/projects/:id',
-        element: <ProjectDetails></ProjectDetails>
-      }
+        path: "/projects/:id",
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <ProjectDetails />
+          </Suspense>
+        ),
+      },
     ],
   },
   {
-    path: '*',
-    element: 'Err'
-  }
+    path: "*",
+    element: "Err",
+  },
 ]);
 
 export default Router;

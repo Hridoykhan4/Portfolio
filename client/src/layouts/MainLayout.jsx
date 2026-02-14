@@ -28,7 +28,7 @@ const MainLayout = () => {
       <div className="flex flex-col selection:bg-primary/30 min-h-screen">
         <Navbar />
 
-        <main id="main-content" className="grow w-full overflow-x-hidden">
+        <main id="main-content" className="grow w-full min-h-screen overflow-x-hidden">
           <Outlet />
         </main>
 

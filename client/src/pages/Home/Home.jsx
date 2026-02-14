@@ -1,22 +1,25 @@
 import Hero from "./Hero";
+import { lazy, Suspense } from "react";
 
-import ExpertiseMarquee from "./ExpertiseMarquee";
-import FeaturedProjects from "./FeaturedProjects";
-import AcademicSnapshot from "./AcademicSnapshot";
-import NewsletterSection from "./NewsletterSection";
+// Lazy load non-critical home sections
+const FeaturedProjects = lazy(() => import("./FeaturedProjects"));
+const ExpertiseMarquee = lazy(() => import("./ExpertiseMarquee"));
+const AcademicSnapshot = lazy(() => import("./AcademicSnapshot"));
+const NewsletterSection = lazy(() => import("./NewsletterSection"));
 
 const Home = () => {
   return (
     <section>
       <Hero />
 
-      <FeaturedProjects />
-
-      <ExpertiseMarquee />
-
-      <AcademicSnapshot />
-
-      <NewsletterSection></NewsletterSection>
+      <Suspense
+        fallback={<div className="h-96 animate-pulse bg-base-200/50" />}
+      >
+        <FeaturedProjects />
+        <ExpertiseMarquee />
+        <AcademicSnapshot />
+        <NewsletterSection />
+      </Suspense>
     </section>
   );
 };
