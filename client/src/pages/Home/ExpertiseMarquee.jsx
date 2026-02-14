@@ -48,7 +48,7 @@ const ExpertiseMarquee = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative section-spacing bg-base-100 overflow-hidden"
+      className="relative section-spacing bg-base-100 overflow-hidden overflow-x-clip"
       aria-labelledby="expertise-heading"
     >
       {/* Ambient Background */}

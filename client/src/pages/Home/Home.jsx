@@ -3,23 +3,17 @@ import Hero from "./Hero";
 import FeaturedProjects from "./FeaturedProjects";
 import ExpertiseMarquee from "./ExpertiseMarquee";
 
-// Heavy/Non-critical sections
 const AcademicSnapshot = lazy(() => import("./AcademicSnapshot"));
 const NewsletterSection = lazy(() => import("./NewsletterSection"));
 
 const Home = () => {
   return (
     <>
-      {/* 1. IDENTITY: Who you are (LCP Priority) */}
       <Hero />
-      
-      {/* 2. PROOF: What you built (The most important conversion) */}
       <FeaturedProjects />
-
-      {/* 3. TRANSITION: Modern visual break with skills marquee */}
       <ExpertiseMarquee />
 
-      {/* 4. DEPTH: Supplemental info loaded as user scrolls */}
+      {/* This Suspense handles components BELOW THE FOLD */}
       <Suspense fallback={<HomeSectionSkeleton />}>
         <AcademicSnapshot />
         <NewsletterSection />
@@ -28,9 +22,11 @@ const Home = () => {
   );
 };
 
+// High-fidelity ghost state to prevent Layout Shift (CLS)
 const HomeSectionSkeleton = () => (
-  <div className="container-page py-20 opacity-10">
-    <div className="h-[400px] w-full bg-base-300 rounded-[3rem] animate-pulse" />
+  <div className="container-page py-20 space-y-10">
+    <div className="h-100 w-full bg-base-300/20 rounded-[3rem] animate-pulse border border-base-content/5" />
+    <div className="h-50 w-full bg-base-300/10 rounded-4xl animate-pulse" />
   </div>
 );
 

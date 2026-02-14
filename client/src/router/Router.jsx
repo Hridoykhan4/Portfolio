@@ -1,49 +1,71 @@
-import { Outlet, useLocation, useNavigation } from "react-router";
-import { useEffect, Suspense } from "react";
-import Navbar from "../pages/shared/Navbar/Navbar";
-import Footer from "../pages/shared/Footer/Footer";
-import SmoothScroll from "../components/SmoothScroll";
-import SmoothCursor from "../components/SmoothCursor";
+import { createBrowserRouter } from "react-router";
+import MainLayout from "../layouts/MainLayout";
+import Home from "../pages/Home/Home";
 
-const MainLayout = () => {
-  const { pathname } = useLocation();
-  const navigation = useNavigation();
-  const isLoading = navigation.state === "loading";
+// High-end Fallback for initial hydration
+const GlobalLoader = () => (
+  <div className="h-screen w-full bg-base-100 flex items-center justify-center">
+    <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+  </div>
+);
 
-  useEffect(() => {
-    // Immediate scroll reset on route change for better UX
-    window.lenis?.scrollTo(0, { immediate: true });
-    window.scrollTo(0, 0);
-  }, [pathname]);
-
-  return (
-    <SmoothScroll>
-      {/* Client-side only cursor enhancement */}
-      <div className="hidden lg:block">
-        <SmoothCursor />
+const Router = createBrowserRouter([
+  {
+    path: "/",
+    element: <MainLayout />,
+    // This is the missing piece that fixes your error
+    HydrateFallback: GlobalLoader,
+    children: [
+      {
+        index: true,
+        element: <Home />,
+      },
+      {
+        path: "about",
+        lazy: () =>
+          import("../pages/About/About").then((m) => ({
+            Component: m.default,
+          })),
+      },
+      {
+        path: "projects",
+        lazy: () =>
+          import("../pages/Projects/Projects").then((m) => ({
+            Component: m.default,
+          })),
+      },
+      {
+        path: "skills",
+        lazy: () =>
+          import("../pages/Skills/Skills").then((m) => ({
+            Component: m.default,
+          })),
+      },
+      {
+        path: "contact",
+        lazy: () =>
+          import("../pages/Contact/Contact").then((m) => ({
+            Component: m.default,
+          })),
+      },
+      {
+        path: "projects/:id",
+        lazy: () =>
+          import("../pages/ProjectDetails/ProjectDetails").then((m) => ({
+            Component: m.default,
+          })),
+      },
+    ],
+  },
+  {
+    path: "*",
+    element: (
+      <div className="h-screen flex flex-col items-center justify-center bg-base-100">
+        <h1 className="text-9xl font-black tracking-tighter opacity-10">404</h1>
+        <p className="text-xl font-bold -mt-8">Artifact Not Found</p>
       </div>
+    ),
+  },
+]);
 
-      <div className="relative flex flex-col min-h-screen">
-        {/* Modern Progress Indicator */}
-        {isLoading && (
-          <div className="fixed top-0 left-0 right-0 h-1 z-[9999] overflow-hidden bg-base-100">
-            <div className="h-full bg-primary animate-[scanline_2s_linear_infinite] w-1/2" />
-          </div>
-        )}
-
-        <Navbar />
-
-        {/* Main Content Area: Use 'relative' for Framer Motion anchors */}
-        <main id="main-content" className="relative grow w-full outline-none">
-          <Suspense fallback={<div className="min-h-screen bg-base-100" />}>
-            <Outlet />
-          </Suspense>
-        </main>
-
-        <Footer />
-      </div>
-    </SmoothScroll>
-  );
-};
-
-export default MainLayout;
+export default Router;
